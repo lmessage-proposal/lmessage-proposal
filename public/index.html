@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="description" content="L Message の改善提案 3件（株式会社ミショナ ITエンジニア職 適性テスト提出物）">
+<title>L Message 改善提案｜株式会社ミショナ 適性テスト</title>
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">L Message 改善提案 <span>／ 適性テスト提出物</span></a>
+    <nav class="site">
+      <a href="/" aria-current="page">概要</a>
+      <a href="/proposal-1">提案1 配信前確認</a>
+      <a href="/proposal-2">提案2 つながり</a>
+      <a href="/proposal-3">提案3 ひな形</a>
+      <a href="/scope">前提と調査範囲</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap prose">
+
+  <span class="kicker">株式会社ミショナ ／ IT エンジニア職 適性テスト</span>
+  <h1>L Message の改善提案 3 件</h1>
+  <p class="meta">提出日 2026年10月26日 ／ 作成者: <!-- ここに氏名を記入 -->（氏名）</p>
+
+  <p class="lede">
+    L Message を「はじめて使う店舗オーナー」と「毎日配信する運用担当者」の両方の立場から見たとき、
+    つまずきやすいのは機能の数ではなく <strong>「この操作でよかったのか、送る前に確かめられない」</strong> という点だと考えました。
+    本提案はこの一点に向けた 3 件です。いずれも新しい概念を増やさず、
+    すでにある機能を <strong>確認できる形に組み直す</strong> ことを狙っています。
+  </p>
+
+  <div class="note plain">
+    <p><strong>この資料の読み方</strong></p>
+    <ul>
+      <li>各提案ページに「課題 → 改善内容 → 図 → 既存機能との重複確認 → 実現可能性（工数と根拠）→ 実装前の確認事項」を同じ順序で記載しています。</li>
+      <li>データ構造や内部処理の設計には踏み込んでいません。意思決定に必要な範囲に絞っています。</li>
+      <li>公開情報で確認できた範囲と、できなかった範囲を <a href="/scope">前提と調査範囲</a> に分けて明記しました。
+          社内の方が見れば事実と違う箇所があると思いますので、そこは指摘いただければ前提から見直します。</li>
+    </ul>
+  </div>
+
+  <h2>3 件の概要</h2>
+
+  <div class="proposal-grid">
+    <a class="pcard" href="/proposal-1">
+      <div class="pc-top">
+        <span class="pc-no">提案 1</span>
+        <span class="badge rec">推奨</span>
+      </div>
+      <div class="pc-title">配信前の確認画面を強化する</div>
+      <p class="pc-sum">
+        送信ボタンを押す直前に「誰に・何が・いつ届くか」を 1 画面にまとめ、
+        間違いやすい点を自動で指摘する最終確認を挟みます。LINE 配信は送信後に取り消せないため、
+        事故の防止効果がもっとも大きいと判断しました。
+      </p>
+      <div class="pc-foot">
+        <span>効果: 大</span><span>手間: 小〜中</span><span>見積: 6〜9 人日</span>
+      </div>
+    </a>
+
+    <a class="pcard" href="/proposal-2">
+      <div class="pc-top">
+        <span class="pc-no">提案 2</span>
+        <span class="badge next">段階導入を提案</span>
+      </div>
+      <div class="pc-title">設定のつながりを見えるようにする</div>
+      <p class="pc-sum">
+        「このタグはどこで使われているのか」を各設定画面に表示し、削除・変更のときに影響を警告します。
+        運用が続くほど設定が増えて触れなくなる、という詰まりを解きます。
+      </p>
+      <div class="pc-foot">
+        <span>効果: 中〜大</span><span>手間: 中〜大</span><span>見積: 第1段 9〜13 人日</span>
+      </div>
+    </a>
+
+    <a class="pcard" href="/proposal-3">
+      <div class="pc-top">
+        <span class="pc-no">提案 3</span>
+        <span class="badge next">体制の確認が先</span>
+      </div>
+      <div class="pc-title">業種別のひな形を用意する</div>
+      <p class="pc-sum">
+        業種を 1 つ選ぶと、その業種で実際に使うタグ・リッチメニュー・シナリオが一式入った状態から始められます。
+        色違いのデザイン集ではなく、業種ごとに<strong>構成そのものを変える</strong>ことが要点です。
+      </p>
+      <div class="pc-foot">
+        <span>効果: 大（新規のみ）</span><span>手間: 大＋継続</span><span>見積: 11〜19 人日＋運用</span>
+      </div>
+    </a>
+  </div>
+
+  <h2>優先順位</h2>
+
+  <div class="table-scroll">
+  <table>
+    <caption>
+      「効果」は影響を受ける利用者の範囲と、起きている損失の大きさで評価しました。
+      「手間」は画面数・影響範囲・既存機能の再利用度から見た相対値です。人日は <a href="/scope">前提と調査範囲</a> の算出条件に基づく概算です。
+    </caption>
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>ユーザーにとっての効果</th>
+        <th>開発の手間</th>
+        <th>既存機能との整合</th>
+        <th>総合</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>提案 1</strong><br>配信前の確認画面</td>
+        <td><span class="badge lo">大</span><br>配信する全アカウントが毎回通る画面。誤配信は取り消せず、通数も消費するため損失が確定する。</td>
+        <td><span class="badge lo">小〜中</span><br>新しい画面 1 枚。既存のプレビューと対象者の絞り込みを組み替えるのが主。</td>
+        <td><span class="badge lo">高</span><br>既存の配信手順に 1 ステップ足すだけで、既存設定の移行が不要。</td>
+        <td><strong>1 位</strong></td>
+      </tr>
+      <tr>
+        <td><strong>提案 2</strong><br>設定のつながりの見える化</td>
+        <td><span class="badge mid">中〜大</span><br>効くのは運用 3 か月以降のアカウント。ただし解約の検討理由になりやすい詰まり。</td>
+        <td><span class="badge mid">中〜大</span><br>参照関係を集める処理が多機能にまたがる。第 1 段と第 2 段に分けたい。</td>
+        <td><span class="badge lo">高</span><br>既存設定を書き換えず、表示を足す方向のため後戻りしやすい。</td>
+        <td><strong>2 位</strong></td>
+      </tr>
+      <tr>
+        <td><strong>提案 3</strong><br>業種別のひな形</td>
+        <td><span class="badge mid">大（ただし新規に限る）</span><br>登録直後の離脱に直接効くが、既存の運用中アカウントには効果が薄い。</td>
+        <td><span class="badge hi">大＋継続</span><br>仕組みより、業種ごとの中身を作り続ける体制の方が重い。</td>
+        <td><span class="badge mid">中</span><br>既存アカウントへ適用したときの衝突と、文面の法令確認という別種の検討が必要。</td>
+        <td><strong>3 位</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <figure>
+    <div class="fig-body">
+      <svg viewBox="0 0 640 400" width="640" height="400" role="img"
+           aria-label="効果と手間の 2 軸で 3 提案を配置した図。提案1は効果が大きく手間が小さい左上寄り、提案2は中央右寄り、提案3は効果は大きいが手間も大きい右上に位置する。">
+        <title>効果と開発の手間による 3 提案の位置づけ</title>
+
+        <!-- 左上（手間小・効果大）の推奨ゾーン -->
+        <rect x="70" y="40" width="235" height="150" class="s-accent-bg" rx="4"/>
+        <text x="82" y="60" font-size="12" font-weight="700" class="acc">まず着手したい領域</text>
+        <text x="82" y="77" font-size="11" class="dim">手間が小さく、効果が大きい</text>
+
+        <!-- 枠 -->
+        <rect x="70" y="40" width="470" height="300" class="s-line" stroke-width="1" rx="4"/>
+        <!-- 中央の仕切り -->
+        <line x1="305" y1="40" x2="305" y2="340" class="s-line" stroke-width="1" stroke-dasharray="3 4"/>
+        <line x1="70" y1="190" x2="540" y2="190" class="s-line" stroke-width="1" stroke-dasharray="3 4"/>
+
+        <!-- 軸ラベル -->
+        <text x="305" y="372" font-size="13" text-anchor="middle" class="soft">開発の手間 →（大きい）</text>
+        <text x="40" y="190" font-size="13" text-anchor="middle" class="soft"
+              transform="rotate(-90 40 190)">ユーザーにとっての効果 →（大きい）</text>
+        <text x="78" y="332" font-size="11" class="dim">小</text>
+        <text x="524" y="332" font-size="11" class="dim">大</text>
+
+        <!-- 提案1 -->
+        <circle cx="188" cy="108" r="9" class="s1-f ring"/>
+        <text x="188" y="98" font-size="11" font-weight="700" text-anchor="middle" class="soft">1</text>
+        <text x="206" y="106" font-size="13" font-weight="700">提案 1 配信前の確認画面</text>
+        <text x="206" y="124" font-size="11.5" class="dim">6〜9 人日／全アカウントが毎回通る</text>
+
+        <!-- 提案3 -->
+        <circle cx="460" cy="120" r="9" class="s3-f ring"/>
+        <text x="460" y="110" font-size="11" font-weight="700" text-anchor="middle" class="soft">3</text>
+        <text x="448" y="152" font-size="13" font-weight="700" text-anchor="end">提案 3 業種別のひな形</text>
+        <text x="448" y="170" font-size="11.5" class="dim" text-anchor="end">11〜19 人日＋継続的な中身の更新</text>
+
+        <!-- 提案2 -->
+        <circle cx="370" cy="232" r="9" class="s2-f ring"/>
+        <text x="370" y="222" font-size="11" font-weight="700" text-anchor="middle" class="soft">2</text>
+        <text x="356" y="262" font-size="13" font-weight="700" text-anchor="end">提案 2 設定のつながりの見える化</text>
+        <text x="356" y="280" font-size="11.5" class="dim" text-anchor="end">第 1 段 9〜13 人日／効くのは運用 3 か月以降</text>
+      </svg>
+    </div>
+    <figcaption>
+      図 0: 上の表を 1 枚にしたもの。位置は上の表の評価をそのまま置いただけで、計測値ではありません。
+      提案 1 だけが「手間が小さく効果が大きい」側にあり、これが推奨の理由です。
+    </figcaption>
+  </figure>
+
+  <h2>推奨する案</h2>
+
+  <div class="card">
+    <h3>提案 1「配信前の確認画面の強化」を最初に実装することを推奨します</h3>
+    <p>理由は 3 つです。</p>
+    <ol>
+      <li><strong>取り返しがつかない失敗を防ぐ機能である。</strong>
+        LINE の配信は送信後に取り消せません。宛先を間違えた、リンクが間違っていた、下書きのまま送った —
+        これらは謝罪・ブロック・消費した通数のすべてが戻りません。
+        他の 2 件は「不便」の解消ですが、提案 1 は「損失」の防止です。</li>
+      <li><strong>効く範囲が最も広い。</strong>
+        配信するアカウントは必ずこの画面を通ります。業種・規模・利用月数を問いません。</li>
+      <li><strong>手間が小さく、やめやすい。</strong>
+        既存の配信手順に 1 画面を挟む形で、既存の設定データを書き換えません。
+        評判が悪ければ画面を外せば元に戻ります。</li>
+    </ol>
+    <p style="margin-bottom:0">
+      提案 2 は第 1 段（使用箇所の表示と削除時の警告）だけを先に出す形であれば、提案 1 の次に着手する価値があります。
+      提案 3 は開発よりも「業種ごとの中身を誰が作り、誰が更新し続けるか」を決めることが先だと考えています。
+    </p>
+  </div>
+
+  <h2>各提案へ</h2>
+  <ul>
+    <li><a href="/proposal-1">提案 1: 配信前の確認画面を強化する（推奨）</a></li>
+    <li><a href="/proposal-2">提案 2: 設定のつながりを見えるようにする</a></li>
+    <li><a href="/proposal-3">提案 3: 業種別のひな形を用意する</a></li>
+    <li><a href="/scope">前提と調査範囲 — 何をどこまで確認したか、工数の数え方</a></li>
+  </ul>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>株式会社ミショナ ITエンジニア職 適性テスト提出物 ／ 2026年10月26日</p>
+    <p>本サイトは選考のための限定公開です。検索エンジンには登録されません（<code>noindex</code> 指定済み）。</p>
+    <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
+  </div>
+</footer>
+
+</body>
+</html>

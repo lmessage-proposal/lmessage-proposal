@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="description" content="提案1: 配信前の確認画面を強化する">
+<title>提案1 配信前の確認画面を強化する｜L Message 改善提案</title>
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">L Message 改善提案 <span>／ 適性テスト提出物</span></a>
+    <nav class="site">
+      <a href="/">概要</a>
+      <a href="/proposal-1" aria-current="page">提案1 配信前確認</a>
+      <a href="/proposal-2">提案2 つながり</a>
+      <a href="/proposal-3">提案3 ひな形</a>
+      <a href="/scope">前提と調査範囲</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap prose">
+
+  <span class="kicker">提案 1 ／ 推奨</span>
+  <h1>配信前の確認画面を強化する</h1>
+  <p class="lede">
+    送信ボタンを押す直前に、<strong>「誰に・何が・いつ届くか」を 1 画面にまとめ、間違いやすい点をツールの側から指摘する</strong>。
+    確認の材料はすでに L Message の中にあります。足りないのは、それが 1 か所に集まっていないことと、
+    人の目視に任されていることです。
+  </p>
+
+  <div class="toc">
+    <div class="h">このページの内容</div>
+    <ol>
+      <li><a href="#problem">具体的な課題点</a></li>
+      <li><a href="#solution">改善の内容と方法</a></li>
+      <li><a href="#figure">図: 現状と改善後</a></li>
+      <li><a href="#existing">既存機能との重複確認</a></li>
+      <li><a href="#feasibility">実現可能性と工数</a></li>
+      <li><a href="#questions">実装する場合の確認事項</a></li>
+    </ol>
+  </div>
+
+  <h2 id="problem">1. 具体的な課題点</h2>
+
+  <h3>前提: LINE の配信は、実質的にやり直せない</h3>
+  <p>
+    L Message の公式マニュアルには、送信したメッセージの取り消しについてこう書かれています。
+  </p>
+  <div class="note warn">
+    <ul style="margin-bottom:0">
+      <li>取り消しは L Message ではなく、接続している <strong>LINE Official Account Manager のトーク画面から</strong>行う</li>
+      <li><strong>取り消すと、友だちに「送信取消を行った通知」が届く</strong>（内容は消えるが、送ったこと自体は消えない）</li>
+      <li><strong>LINE Official Account Manager から一斉配信したメッセージは取り消せない</strong></li>
+      <li>取り消せるのは<strong>チャット上に表示されている友だちのみ</strong>（過去に返信をくれた人に限られる）</li>
+      <li><strong>送信から 24 時間以上たつと取り消せない</strong></li>
+    </ul>
+  </div>
+  <p>
+    つまり <strong>一斉配信の失敗は、ほぼ回収できません</strong>。
+    さらに L Message の配信は「エルメ配信数」と「LINE 公式アカウント配信数」の両方にカウントされるため、
+    間違った配信にも<strong>お金が確定でかかります</strong>。フリープランでは月 1,000 通に達すると配信が自動停止するため、
+    誤配信は「その月の配信枠を失う」ことまで意味します。
+  </p>
+  <p>
+    この性質に対して、公式マニュアルが現場に求めている確認は、たとえばこうです。
+  </p>
+  <blockquote class="note plain">
+    <p style="margin:0">
+      「予定していた配信数よりも極端に多い場合や少ない場合は、タグの設定が誤っている可能性がございますので、前の画面に戻ってご確認ください。」
+      <span style="color:var(--ink-faint);font-size:.9em">（タグ付けしたユーザーへの一斉配信方法）</span>
+    </p>
+  </blockquote>
+  <p>
+    <strong>「極端に多い／少ない」かどうかを判断しているのは、人間の記憶です。</strong>
+    前回が何人だったかを覚えていなければ、この確認は成立しません。ここが本提案の出発点です。
+  </p>
+
+  <h3>課題 1-1: 確認の材料が 3 つの画面に分かれている</h3>
+  <p>
+    いま配信前に確認できることは、それぞれ別の場所にあります。
+  </p>
+  <div class="table-scroll">
+  <table>
+    <caption>公式マニュアルの記述から整理した、配信前に確認できる材料と、その置き場所。</caption>
+    <thead>
+      <tr><th>確認したいこと</th><th>いまできること</th><th>場所</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>何人に届くか</td><td>「配信予定数」「予定配信者数」が表示される</td><td>配信先絞り込みの画面（条件を保存した後）</td></tr>
+      <tr><td>どう見えるか</td><td>「プレビュー・テスト」からテストユーザーへ実機送信</td><td>別画面。しかも<strong>テスト送信も通数を消費する</strong></td></tr>
+      <tr><td>内容が正しいか</td><td>「配信内容を確認して送信に進む」→「この内容で配信登録」</td><td>登録の最終段</td></tr>
+      <tr><td>通数が足りるか</td><td>上限を超える可能性があるときにアラート（2026 年 8 月追加）</td><td>配信時。なお LINE 公式側の配信数は<strong>1 日 1 回深夜更新</strong>で、余裕があるように見えても実際は超過していることがある</td></tr>
+      <tr><td><strong>誰に届くか（名前）</strong></td><td><strong>件数以外は確認できない</strong></td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    1 つ 1 つは存在します。しかし <strong>「送るぞ」と決める瞬間に、全部が同時に見えている画面がありません。</strong>
+    結果として、見る順番と見落としが人によって変わります。
+  </p>
+
+  <h3>課題 1-2: 対象者が「数」でしか見えない</h3>
+  <p>
+    「38 人」と表示されても、その 38 人が狙った 38 人かどうかは分かりません。
+    タグ条件を 1 つ付け間違えても、数字はそれらしい値になります。
+    「タグ A を持つ人」と書くつもりで「タグ A を持たない人」を選んでいた場合、
+    数字は大きく変わりますが、<strong>何人が正解なのかを知らなければ気づけません</strong>。
+  </p>
+  <p>
+    なお、友だちリスト画面では同じ絞り込み条件で実際の友だちを一覧できます。しかし
+    <strong>同じ条件を二度入力する必要があり、配信に使った条件と同一であることは保証されません</strong>。
+    確認手段としては弱いと考えています。
+  </p>
+
+  <h3>課題 1-3: 予約配信は「予定数」と「実際に届く人」がずれる</h3>
+  <p>公式マニュアルに明記されている仕様です。</p>
+  <blockquote class="note plain">
+    <p style="margin:0">
+      「こちらはあくまでも現時点での配信予定数になりますので、配信予約を行っていて配信日時が到来したタイミングで
+      絞り込み条件に合致する友だち数が変化した場合は、配信を行う時点で絞り込み条件に合致する友だちに対してメッセージが配信されます。」
+      <span style="color:var(--ink-faint);font-size:.9em">（メッセージ（一斉）配信 操作マニュアル）</span>
+    </p>
+  </blockquote>
+  <p>
+    仕様としては妥当です。問題は、<strong>1 週間前に「38 人」を見て納得した人が、当日 1,200 人に届くことを知る手段がない</strong>点です。
+    タグの自動付与やステップ配信と組み合わせているアカウントでは、条件に合う人数は勝手に増えます。
+  </p>
+
+  <h3>課題 1-4: 「よくある間違い」をツールが知っているのに指摘しない</h3>
+  <p>
+    公式マニュアルには、つまずきどころが各ページに散らばって書かれています。
+    「ステップ配信を作成しただけでは配信されません」「クイックリプライは同時に 2 通以上送信できません」
+    「意図しないループ継続は配信数を大量に消費する恐れがあります」—
+    <strong>これらはすべて、設定を見れば機械的に判定できる条件です。</strong>
+    それが文章での注意喚起に留まっており、画面上の指摘になっていません。
+  </p>
+
+  <h2 id="solution">2. 改善の内容と方法</h2>
+
+  <p>
+    「この内容で配信登録」の<strong>直前に、確認専用の 1 画面を挟みます</strong>。
+    新しい概念は増やしません。すでにある情報を 1 か所に集め、判定できるものは判定して出す、という内容です。
+  </p>
+
+  <h3>画面に載せるもの</h3>
+  <ol>
+    <li>
+      <strong>配信先（誰に）</strong><br>
+      予定配信者数と、その内訳（例: タグ「来店済み」142 人 − タグ「配信停止希望」8 人 = 134 人）。
+      条件を文章で 1 行に言い換えて表示します（「来店済み で、かつ 配信停止希望 ではない友だち」）。
+      あわせて<strong>対象者の先頭 20 名の表示名</strong>を出し、「狙った人が入っているか」を目で確かめられるようにします。
+    </li>
+    <li>
+      <strong>内容（何が）</strong><br>
+      吹き出しを届く順に並べた表示。差し込み項目（友だち名など）は、
+      <strong>実際の対象者 1 人を当てはめた状態</strong>で表示します。
+      「{友だち名} さん、こんにちは」が「 さん、こんにちは」になる人が何人いるかも出します。
+    </li>
+    <li>
+      <strong>タイミングと通数（いつ・いくら）</strong><br>
+      配信日時、そして<strong>この配信で消費する見込みの通数と、残りの枠</strong>。
+      LINE 公式側の配信数は深夜更新であることを踏まえ、「最後に更新された時刻」を併記して、
+      数字を過信させないようにします。
+    </li>
+    <li>
+      <strong>自動チェックの結果</strong><br>
+      下の表の項目を判定し、<strong>赤（送信をいったん止める）／黄（確認を促す）／緑（問題なし）</strong>で出します。
+    </li>
+    <li>
+      <strong>テスト送信ボタンをこの画面に置く</strong><br>
+      いま別画面にある「プレビュー・テスト」をここから呼べるようにします。
+      <strong>テスト送信も通数を消費する</strong>ことをボタンのそばに明記します（現在この注意はマニュアルにしか書かれていません）。
+    </li>
+  </ol>
+
+  <h3>自動チェックの項目</h3>
+  <div class="table-scroll">
+  <table>
+    <caption>
+      判定の重さは設定で変えられるようにします。最初は全部「黄（警告のみ）」で出し、
+      運用実績を見てから「赤」に上げる項目を決める想定です。
+    </caption>
+    <thead>
+      <tr><th>チェック</th><th>何を見るか</th><th>既定</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>配信先が 0 人</td><td>条件に合う友だちがいない</td><td><span class="badge hi">赤</span></td></tr>
+      <tr><td><strong>前回との差が大きい</strong></td><td>同じ条件での前回配信と比べて人数が 3 倍以上／3 分の 1 以下。公式マニュアルが人に求めている「極端に多い／少ない」の確認を、ツール側で持つ</td><td><span class="badge hi">赤</span></td></tr>
+      <tr><td>残り通数を超える</td><td>既存の上限アラートをこの画面に統合し、送信前に見えるようにする</td><td><span class="badge hi">赤</span></td></tr>
+      <tr><td>リンクが開けない</td><td>本文中の URL に実際にアクセスし、応答しないものを指摘。<code>http://</code> のままの URL も指摘</td><td><span class="badge mid">黄</span></td></tr>
+      <tr><td>差し込みが空になる人がいる</td><td>友だち情報が未登録で、文章が不自然になる対象者の人数</td><td><span class="badge mid">黄</span></td></tr>
+      <tr><td>吹き出しが空・画像だけ</td><td>テキストのない配信、または本文が未入力の吹き出し</td><td><span class="badge mid">黄</span></td></tr>
+      <tr><td>深夜に届く</td><td>配信予定時刻が 22 時〜8 時</td><td><span class="badge mid">黄</span></td></tr>
+      <tr><td>直近に同じ人へ送っている</td><td>24 時間以内に同じ対象へ配信した履歴</td><td><span class="badge mid">黄</span></td></tr>
+      <tr><td>テスト送信をしていない</td><td>この配信内容でまだテスト送信していない</td><td><span class="badge mid">黄</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>予約配信への対応</h3>
+  <p>
+    課題 1-3 に対しては、2 つを組み合わせます。
+  </p>
+  <ul>
+    <li>予約一覧に、<strong>「登録時の予定数」と「現在の該当数」を並べて</strong>表示する</li>
+    <li>配信時刻の直前にもう一度人数を数え、<strong>登録時から設定した割合以上ずれていたら配信せず保留にして通知する</strong>（既定はオフ。大規模配信のみ有効にできる）</li>
+  </ul>
+  <p>
+    「黙って 1,200 人に送る」のではなく、「ずれたので止めました、確認してください」と言える状態にするのが目的です。
+  </p>
+
+  <h3>やらないこと</h3>
+  <ul>
+    <li><strong>小規模配信で手数を増やさない。</strong>
+      対象が一定人数（例: 50 人）未満で、自動チェックがすべて緑なら、この画面は折りたたんだ要約表示にして
+      そのまま送信できるようにします。全員に毎回クリックを増やす提案ではありません。</li>
+    <li><strong>送信後のロールバック機能は作らない。</strong>
+      LINE 側の制約（24 時間・一斉配信は不可・取消通知が飛ぶ）から、実現しても使い物にならないと判断しました。
+      予防に寄せます。</li>
+  </ul>
+
+  <h2 id="figure">3. 図</h2>
+
+  <figure>
+    <div class="fig-body">
+      <svg viewBox="0 0 680 330" width="680" height="330" role="img"
+           aria-label="現状の配信手順では確認の材料が複数の画面に分かれているのに対し、改善後は配信前チェックの1画面に集約される流れを比較した図。">
+        <title>現状の配信手順と、改善後の配信手順の比較</title>
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <!-- 現状 -->
+        <text x="0" y="16" font-size="12" font-weight="700" class="bad">現状</text>
+        <g style="color:var(--ink-faint)">
+          <line x1="128" y1="58" x2="146" y2="58" class="s-stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+          <line x1="256" y1="58" x2="274" y2="58" class="s-stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+          <line x1="384" y1="58" x2="402" y2="58" class="s-stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+          <line x1="512" y1="58" x2="530" y2="58" class="s-stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+        </g>
+
+        <rect x="2" y="32" width="126" height="52" rx="5" class="s-sunk"/>
+        <rect x="2" y="32" width="126" height="52" rx="5" class="s-line"/>
+        <text x="12" y="52" font-size="11.5" font-weight="700">配信先の絞り込み</text>
+        <text x="12" y="69" font-size="10.5" class="dim">予定配信者数が出る</text>
+
+        <rect x="146" y="32" width="110" height="52" rx="5" class="s-sunk"/>
+        <rect x="146" y="32" width="110" height="52" rx="5" class="s-line"/>
+        <text x="156" y="52" font-size="11.5" font-weight="700">メッセージ作成</text>
+
+        <rect x="274" y="32" width="110" height="52" rx="5" class="s-bad-bg"/>
+        <rect x="274" y="32" width="110" height="52" rx="5" class="s-bad-s" stroke-width="1"/>
+        <text x="284" y="50" font-size="11.5" font-weight="700">プレビュー・テスト</text>
+        <text x="284" y="65" font-size="10.5" class="bad">別画面へ移動</text>
+        <text x="284" y="78" font-size="10.5" class="bad">通数も消費する</text>
+
+        <rect x="402" y="32" width="110" height="52" rx="5" class="s-sunk"/>
+        <rect x="402" y="32" width="110" height="52" rx="5" class="s-line"/>
+        <text x="412" y="50" font-size="11.5" font-weight="700">配信内容を確認</text>
+        <text x="412" y="67" font-size="10.5" class="dim">して送信に進む</text>
+
+        <rect x="530" y="32" width="110" height="52" rx="5" class="s-bad-bg"/>
+        <rect x="530" y="32" width="110" height="52" rx="5" class="s-bad-s" stroke-width="1.5"/>
+        <text x="540" y="50" font-size="11.5" font-weight="700" class="bad">この内容で配信登録</text>
+        <text x="540" y="67" font-size="10.5" class="bad">即時に届く</text>
+
+        <text x="2" y="108" font-size="11" class="dim">確認の材料が 3 つの画面に散っていて、「何人が正しいのか」は人の記憶に依存する。</text>
+        <text x="2" y="125" font-size="11" class="bad">送信後: 一斉配信は取り消せない／24 時間を過ぎると取り消せない／取り消すと通知が飛ぶ</text>
+
+        <line x1="2" y1="148" x2="678" y2="148" class="s-line"/>
+
+        <!-- 改善後 -->
+        <text x="0" y="178" font-size="12" font-weight="700" class="good">改善後</text>
+        <g style="color:var(--ink-faint)">
+          <line x1="128" y1="222" x2="146" y2="222" class="s-stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+          <line x1="256" y1="222" x2="274" y2="222" class="s-stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+          <line x1="512" y1="222" x2="530" y2="222" class="s-stroke" stroke-width="1.5" marker-end="url(#ar)"/>
+        </g>
+
+        <rect x="2" y="196" width="126" height="52" rx="5" class="s-sunk"/>
+        <rect x="2" y="196" width="126" height="52" rx="5" class="s-line"/>
+        <text x="12" y="222" font-size="11.5" font-weight="700">配信先の絞り込み</text>
+
+        <rect x="146" y="196" width="110" height="52" rx="5" class="s-sunk"/>
+        <rect x="146" y="196" width="110" height="52" rx="5" class="s-line"/>
+        <text x="156" y="222" font-size="11.5" font-weight="700">メッセージ作成</text>
+
+        <rect x="274" y="186" width="238" height="78" rx="5" class="s-good-bg"/>
+        <rect x="274" y="186" width="238" height="78" rx="5" class="s-good-s" stroke-width="1.5"/>
+        <text x="286" y="206" font-size="12" font-weight="700" class="good">配信前チェック（新設・1 画面）</text>
+        <text x="286" y="224" font-size="10.5" class="soft">誰に（内訳＋対象者 20 名）・何が（届く順）・いつ・いくら</text>
+        <text x="286" y="240" font-size="10.5" class="soft">自動チェック 9 項目／テスト送信もここから</text>
+        <text x="286" y="256" font-size="10.5" class="good">赤が出ている間は送信ボタンを押せない</text>
+
+        <rect x="530" y="196" width="110" height="52" rx="5" class="s-good-bg"/>
+        <rect x="530" y="196" width="110" height="52" rx="5" class="s-good-s" stroke-width="1.5"/>
+        <text x="540" y="222" font-size="11.5" font-weight="700" class="good">この内容で配信登録</text>
+
+        <text x="2" y="290" font-size="11" class="dim">小規模（50 人未満）かつ全項目が緑なら、要約表示のままそのまま送信できる。手数は増やさない。</text>
+        <text x="2" y="309" font-size="11" class="dim">予約配信は、配信直前にもう一度人数を数え、登録時から大きくずれていたら保留して通知する。</text>
+      </svg>
+    </div>
+    <figcaption>
+      図 1-1: 配信手順の比較。箱の名称は L Message 公式マニュアルに出てくる画面名・ボタン名に合わせています。
+      新しく増えるのは中央の 1 画面だけで、前後の手順は変えません。
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="fig-body">
+      <svg viewBox="0 0 680 430" width="680" height="430" role="img"
+           aria-label="配信前チェック画面の画面イメージ。左にスマホでの表示プレビュー、右上に配信先の内訳と対象者名、右下に自動チェックの一覧、下部に送信ボタンが配置されている。">
+        <title>配信前チェック画面のイメージ</title>
+
+        <!-- 画面枠 -->
+        <rect x="1" y="1" width="678" height="428" rx="7" class="s-bg"/>
+        <rect x="1" y="1" width="678" height="428" rx="7" class="s-line"/>
+        <rect x="1" y="1" width="678" height="40" rx="7" class="s-sunk"/>
+        <line x1="1" y1="41" x2="679" y2="41" class="s-line"/>
+        <text x="18" y="26" font-size="13" font-weight="700">配信前チェック</text>
+        <text x="662" y="26" font-size="11" class="dim" text-anchor="end">メッセージ作成に戻る</text>
+
+        <!-- 左: スマホプレビュー -->
+        <text x="18" y="64" font-size="11" font-weight="700" class="soft">届いたときの見え方</text>
+        <rect x="18" y="74" width="150" height="256" rx="12" class="s-sunk"/>
+        <rect x="18" y="74" width="150" height="256" rx="12" class="s-line"/>
+        <rect x="63" y="80" width="60" height="5" rx="2.5" class="s-line" stroke-width="0"/>
+        <rect x="63" y="80" width="60" height="5" rx="2.5" fill="currentColor" style="color:var(--line)"/>
+        <!-- 吹き出し -->
+        <rect x="30" y="98" width="110" height="40" rx="9" class="s-bg"/>
+        <rect x="30" y="98" width="110" height="40" rx="9" class="s-line"/>
+        <text x="39" y="114" font-size="9.5">田中 さん、こんにちは</text>
+        <text x="39" y="129" font-size="9.5" class="dim">10月のご案内です</text>
+        <rect x="30" y="146" width="110" height="66" rx="9" class="s-bg"/>
+        <rect x="30" y="146" width="110" height="66" rx="9" class="s-line"/>
+        <rect x="38" y="154" width="94" height="36" rx="4" class="s-sunk"/>
+        <text x="85" y="176" font-size="9" class="dim" text-anchor="middle">画像</text>
+        <text x="39" y="204" font-size="9.5">ご予約はこちら</text>
+        <rect x="30" y="220" width="110" height="26" rx="9" class="s-bg"/>
+        <rect x="30" y="220" width="110" height="26" rx="9" class="s-line"/>
+        <text x="39" y="237" font-size="9.5">11/3 まで有効です</text>
+        <text x="30" y="266" font-size="9.5" class="dim">3 吹き出し ／ 1 配信</text>
+        <text x="30" y="282" font-size="9.5" class="dim">差し込みは対象者の</text>
+        <text x="30" y="296" font-size="9.5" class="dim">1 人目を当てはめて表示</text>
+        <text x="30" y="316" font-size="10" class="acc" font-weight="700">自分にテスト送信</text>
+
+        <!-- 右上: 配信先 -->
+        <text x="192" y="64" font-size="11" font-weight="700" class="soft">誰に届くか</text>
+        <rect x="192" y="74" width="470" height="104" rx="6" class="s-bg"/>
+        <rect x="192" y="74" width="470" height="104" rx="6" class="s-line"/>
+        <text x="206" y="104" font-size="26" font-weight="700" class="s-accent-f">134</text>
+        <text x="258" y="104" font-size="12" class="soft">人に届きます</text>
+        <text x="206" y="124" font-size="10.5" class="dim">タグ「来店済み」142 人 − タグ「配信停止希望」8 人</text>
+        <text x="206" y="141" font-size="10.5" class="dim">条件: 来店済み で、かつ 配信停止希望 ではない友だち</text>
+        <line x1="206" y1="150" x2="648" y2="150" class="s-line"/>
+        <text x="206" y="166" font-size="10.5" class="soft">対象者: 田中 / 佐藤 / 鈴木 / 高橋 / 山本 … ほか 129 人</text>
+        <text x="648" y="166" font-size="10.5" class="acc" text-anchor="end">全員を見る</text>
+
+        <!-- 右下: 自動チェック -->
+        <text x="192" y="202" font-size="11" font-weight="700" class="soft">自動チェック</text>
+        <rect x="192" y="212" width="470" height="150" rx="6" class="s-bg"/>
+        <rect x="192" y="212" width="470" height="150" rx="6" class="s-line"/>
+
+        <rect x="200" y="220" width="454" height="32" rx="4" class="s-bad-bg"/>
+        <circle cx="216" cy="236" r="5" class="s-bad-s" stroke-width="2"/>
+        <text x="230" y="233" font-size="10.5" font-weight="700" class="bad">前回の同じ条件は 38 人でした。今回は 134 人です</text>
+        <text x="230" y="247" font-size="10" class="dim">3.5 倍に増えています。タグの条件を確認してください</text>
+
+        <rect x="200" y="256" width="454" height="24" rx="4" class="s-warn-bg"/>
+        <circle cx="216" cy="268" r="5" class="s-warn-s" stroke-width="2"/>
+        <text x="230" y="272" font-size="10.5" class="warn">リンク 1 件が http:// のままです（https:// を推奨）</text>
+
+        <rect x="200" y="284" width="454" height="24" rx="4" class="s-warn-bg"/>
+        <circle cx="216" cy="296" r="5" class="s-warn-s" stroke-width="2"/>
+        <text x="230" y="300" font-size="10.5" class="warn">友だち名が未登録の人が 6 人います（文頭が空白になります）</text>
+
+        <rect x="200" y="312" width="454" height="22" rx="4" class="s-good-bg"/>
+        <circle cx="216" cy="323" r="5" class="s-good-s" stroke-width="2"/>
+        <text x="230" y="327" font-size="10.5" class="good">残り通数は足りています（エルメ 無制限 / LINE 公式 残 2,140 通）</text>
+        <text x="648" y="327" font-size="9.5" class="dim" text-anchor="end">LINE 公式側は深夜更新</text>
+
+        <text x="200" y="352" font-size="10" class="dim">ほか 5 項目は問題なし（0 人チェック・深夜配信・24 時間以内の重複・空の吹き出し・テスト送信）</text>
+
+        <!-- 下部ボタン -->
+        <line x1="1" y1="378" x2="679" y2="378" class="s-line"/>
+        <rect x="192" y="392" width="150" height="26" rx="5" class="s-sunk"/>
+        <rect x="192" y="392" width="150" height="26" rx="5" class="s-line"/>
+        <text x="267" y="409" font-size="11" text-anchor="middle" class="soft">下書きとして保存</text>
+        <rect x="474" y="392" width="188" height="26" rx="5" class="s-sunk"/>
+        <rect x="474" y="392" width="188" height="26" rx="5" class="s-line" stroke-dasharray="3 3"/>
+        <text x="568" y="409" font-size="11" text-anchor="middle" class="dim">この内容で配信登録</text>
+        <text x="18" y="409" font-size="10" class="bad">赤 1 件のため、まだ送信できません</text>
+      </svg>
+    </div>
+    <figcaption>
+      図 1-2: 画面イメージ（配置の案であり、確定デザインではありません）。
+      左の表示プレビューと「自分にテスト送信」は既存の「プレビュー・テスト」を置き直したもの、
+      「134 人」は既存の「予定配信者数」です。新しく足すのは<strong>内訳の 1 行説明・対象者名・自動チェックの一覧</strong>の 3 つです。
+    </figcaption>
+  </figure>
+
+  <h2 id="existing">4. 既存機能との重複確認</h2>
+
+  <p>
+    公式マニュアル（lme.jp/manual）を確認した結果、<strong>部品はかなり揃っていました</strong>。
+    重複する部分と、確認できなかった部分を正直に分けて書きます。
+  </p>
+
+  <div class="table-scroll">
+  <table>
+    <caption>
+      ◯ = すでにある ／ △ = 近いものがあるが足りない ／ ✕ = 公式マニュアルに記述を見つけられなかった。
+      ✕ は「存在しない」の断定ではありません。詳しくは <a href="/scope">前提と調査範囲</a>。
+    </caption>
+    <thead>
+      <tr><th>本提案の要素</th><th>既存</th><th>確認した内容</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>対象人数の事前表示</td>
+        <td><span class="badge lo">◯ ある</span></td>
+        <td>「配信予定数」「予定配信者数」として存在。<strong>本提案はこれを新設するものではなく、確認画面に移す</strong>ものです。</td>
+      </tr>
+      <tr>
+        <td>実機での見え方の確認</td>
+        <td><span class="badge lo">◯ ある</span></td>
+        <td>「プレビュー・テスト」でテストユーザーへ実機送信できる。クイックテストユーザー、ステップ配信の一括テストもある。<strong>別画面であることと、通数を消費する注意が画面上に出ていない</strong>点が改善対象。</td>
+      </tr>
+      <tr>
+        <td>通数の上限アラート</td>
+        <td><span class="badge lo">◯ ある</span></td>
+        <td>2026 年 8 月のアップデートで追加。<strong>本提案はこれを確認画面に統合する</strong>のみで、作り直しません。</td>
+      </tr>
+      <tr>
+        <td>送信前の確認ステップ</td>
+        <td><span class="badge mid">△ 近いものがある</span></td>
+        <td>「配信内容を確認して送信に進む」→「この内容で配信登録」というステップは存在。ただし<strong>その画面に配信件数・絞り込み条件・自動チェックのどこまでが出るかは公式マニュアルに記述がなく、未確認</strong>です。ここが重なる場合、本提案は「新規画面」ではなく「既存確認画面への項目追加」になり、工数は下振れします。</td>
+      </tr>
+      <tr>
+        <td>対象者の氏名の事前確認</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>配信画面で確認できるのは件数のみ。友だちリストで同条件を再入力すれば一覧できるが、配信条件と同一である保証がない。</td>
+      </tr>
+      <tr>
+        <td>前回配信との人数の差分チェック</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>マニュアルは「極端に多い場合や少ない場合は…ご確認ください」と<strong>人に目視を求めている</strong>。機械判定の記述はない。</td>
+      </tr>
+      <tr>
+        <td>内容の自動チェック（リンク・差し込み・深夜など）</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>エラー一覧・エラーコードは存在するが、これは<strong>送信が失敗したときのもの</strong>で、送信前の内容点検ではない。</td>
+      </tr>
+      <tr>
+        <td>予約配信の直前再チェック／保留</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>「配信を行う時点で絞り込み条件に合致する友だちに配信される」という仕様は明記されているが、<strong>ずれを検知して止める仕組みの記述はない</strong>。</td>
+      </tr>
+      <tr>
+        <td>誤配信防止をまとめた導線</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>注意書きは各機能ページに散在。横断した機能・FAQ ページは見つからなかった。</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <p style="margin:0">
+      <strong>まとめ:</strong> 本提案の新規性は「新しい確認手段を発明すること」ではなく、
+      <strong>①散っている確認材料を 1 画面に集めること、②人の記憶に任されている判断（前回と比べて極端か）をツールが持つこと、③予約配信のずれを検知すること</strong>の 3 点です。
+      ①は既存機能の再配置なので工数が小さく、②③が本提案の主要な追加部分です。
+    </p>
+  </div>
+
+  <h2 id="feasibility">5. 実現可能性と工数</h2>
+
+  <h3>技術的に可能か</h3>
+  <ul>
+    <li><strong>可能と考えます。</strong>表示する情報の大半は、L Message が配信のためにすでに持っている情報です
+      （絞り込み条件、対象件数、メッセージ本文、配信数サマリー）。外部サービスの追加も不要です。</li>
+    <li>唯一外部通信が増えるのは「リンクが開けるか」の確認です。配信前の 1 回だけ、本文中の URL に対して行います。
+      相手サーバーに負荷をかけないよう、<strong>1 配信あたりの検査本数に上限を設け、応答は待ちすぎずに打ち切り、結果は短時間だけ再利用</strong>します。
+      確認できなかった場合は「赤」にせず「確認できませんでした」と出します。</li>
+    <li>対象者件数の再計算は、既存の絞り込みがすでに行っている処理です。
+      ただし<strong>友だち数が多いアカウント（公式記載で最大 10 万人）で確認画面を開くたびに数え直すと重くなる</strong>可能性があります。
+      これは「確認画面を開いた時に 1 回だけ数える」「結果を数十秒だけ保持する」で足りる見込みですが、実データでの計測が必要です（下の確認事項）。</li>
+  </ul>
+
+  <h3>リソース面で可能か</h3>
+  <ul>
+    <li>新しい外部サービスの契約、追加の月額費用は発生しません。</li>
+    <li>デザインは既存の管理画面の部品で組める範囲です（表・バッジ・既存のプレビュー）。新規のイラストや素材は不要です。</li>
+    <li><strong>影響範囲が配信手順の中に閉じている</strong>ため、他機能の改修を巻き込みません。</li>
+  </ul>
+
+  <h3>工数の見積もり</h3>
+
+  <div class="effort">
+    <span class="big">6〜9</span><span class="unit">人日（第 1 段）</span>
+    <span style="color:var(--line)">｜</span>
+    <span class="big">4〜6</span><span class="unit">人日（第 2 段・任意）</span>
+  </div>
+
+  <div class="table-scroll">
+  <table>
+    <caption>
+      1 人日 = L Message の開発に慣れたエンジニア 1 名の実働 1 日。設計・実装・自己テストを含み、
+      デザイン制作・QA・リリース作業・ドキュメント更新は含みません。詳しい数え方は <a href="/scope">前提と調査範囲</a>。
+    </caption>
+    <thead>
+      <tr><th>内容</th><th class="num">人日</th><th>根拠</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">第 1 段: これだけで事故の大半は防げる想定</td>
+      </tr>
+      <tr><td>確認画面の作成（既存のプレビュー・予定配信者数・上限アラートの再配置）</td><td class="num">2.0〜2.5</td><td>新しい計算はほぼなく、既存の表示を 1 画面に並べる作業。既存の確認画面に相乗りできる場合は 1.0 前後まで下がる</td></tr>
+      <tr><td>絞り込み条件を日本語 1 行に言い換える表示</td><td class="num">0.5</td><td>条件の種類は公式マニュアルで 10 数種類。文章化の規則を作れば単純作業</td></tr>
+      <tr><td>対象者の先頭 20 名表示＋全員一覧への導線</td><td class="num">1.0</td><td>既存の友だちリストと同じ条件で先頭だけ取る。権限による表示制御を含む</td></tr>
+      <tr><td>自動チェック 9 項目（リンク検査を含む）</td><td class="num">2.0〜2.5</td><td>7 項目は手元のデータを見るだけで判定でき、1 項目 0.2 人日前後。リンク検査のみ外部通信・上限・打ち切りの扱いで 0.8 人日程度</td></tr>
+      <tr><td>赤が出ているときに送信を止める／小規模時は折りたたむ分岐</td><td class="num">0.5</td><td>条件分岐と表示の切り替えのみ</td></tr>
+      <tr><td>結合テストと調整</td><td class="num">1.0〜1.5</td><td>即時配信・予約配信・ステップ配信・テンプレートの 4 経路を確認。配信は取り消せないため、テスト用アカウントでの検証に時間を取る</td></tr>
+      <tr>
+        <td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">第 2 段: 第 1 段の反応を見てから</td>
+      </tr>
+      <tr><td>前回の同条件配信との人数差分チェック</td><td class="num">1.5〜2.0</td><td>「同じ条件」をどう同一と見なすかの決めごとが必要。過去の配信履歴の参照も入る</td></tr>
+      <tr><td>予約一覧に「登録時の予定数／現在の該当数」を並べて表示</td><td class="num">1.0〜1.5</td><td>一覧の件数計算が予約数に比例して増えるため、更新頻度を抑える工夫が必要</td></tr>
+      <tr><td>配信直前の再チェックとずれた場合の保留・通知</td><td class="num">1.5〜2.5</td><td>配信処理そのものに手を入れる唯一の箇所。<strong>間違えると配信が止まる</strong>ため、ここだけは慎重な検証が必要</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <p style="margin:0">
+      <strong>見積もりの幅と前提について。</strong>
+      私は L Message の実際のコードと管理画面を見ていません。この数字は公式マニュアルから読み取れる画面構成をもとにした概算で、
+      実装の内部事情によっては外れます。特に <strong>既存の「配信内容を確認」画面に何が表示されているか</strong>が分かれば、
+      第 1 段は下振れする可能性があります。<strong>最初に確認したいのはそこです。</strong>
+    </p>
+  </div>
+
+  <h2 id="questions">6. 実装する場合の確認事項</h2>
+
+  <h4>仕様を決める前に伺いたいこと</h4>
+  <ul class="check">
+    <li>既存の「配信内容を確認して送信に進む」の画面には、いま何が表示されていますか。新規画面を作るのか、既存画面に項目を足すのかで、工数と見た目が変わります。</li>
+    <li>誤配信に関する問い合わせは、実際にどのくらい届いていますか。多い内容の上位 3 件が分かれば、自動チェックの項目をそれに合わせたいです。</li>
+    <li>自動チェックのうち「赤（送信を止める）」にしてよい項目はどれでしょうか。送信を止めることは、それ自体がリスクになります。全部「黄」から始める案を既定にしていますが、判断を伺いたいです。</li>
+    <li>対象者の氏名を確認画面に出すことについて、個人情報の扱い上の制約はありますか。スタッフ権限によって表示を変える必要があれば、表示範囲を先に決めたいです。</li>
+    <li>この画面を省略できる条件（50 人未満など）の線引きは、どのあたりが現実的でしょうか。利用アカウントの配信規模の分布が分かれば決めやすいです。</li>
+  </ul>
+
+  <h4>実装前に計測・検証したいこと</h4>
+  <ul class="check">
+    <li>友だち数の多いアカウントで、絞り込み条件に合う人数を数えるのにどれくらい時間がかかるか。確認画面を開く操作が遅くなるなら、表示の出し方を変えます。</li>
+    <li>リンク検査が、相手サーバーにとって迷惑にならない範囲に収まるか（1 配信あたりの検査本数・打ち切り時間）。</li>
+    <li>LINE 公式アカウント側の配信数が 1 日 1 回深夜更新であることを踏まえ、「残り通数」をどこまで断定して表示してよいか。断定できないなら、断定しない書き方にします。</li>
+  </ul>
+
+  <h4>運用側に確認したいこと</h4>
+  <ul class="check">
+    <li>第 2 段の「ずれたら配信を保留する」は、既定でオフにする前提でよいでしょうか。意図せず配信が止まるとクレームになるため、既定オフ・大規模配信のみ任意で有効が安全だと考えています。</li>
+    <li>保留になったときの通知先はどこが適切でしょうか（管理画面の通知、メール、LINE への通知）。</li>
+    <li>この画面を入れたあと、「誤配信が減ったか」を何で測りますか。送信取り消しの実行回数や問い合わせ件数が取れるなら、導入前後で比較したいです。測れないものは、入れても良くなったか分かりません。</li>
+  </ul>
+
+  <div class="pager">
+    <a href="/">← 概要と優先順位</a>
+    <a href="/proposal-2">提案 2 設定のつながりの見える化 →</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>株式会社ミショナ ITエンジニア職 適性テスト提出物 ／ 2026年10月26日</p>
+    <p>本サイトは選考のための限定公開です。検索エンジンには登録されません（<code>noindex</code> 指定済み）。</p>
+    <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "lmessage-proposal",
+  "private": true,
+  "version": "1.0.0",
+  "description": "L Message 改善提案（株式会社ミショナ ITエンジニア職 適性テスト提出物）",
+  "type": "module",
+  "dependencies": {
+    "@vercel/functions": "^2.0.0"
+  }
+}
