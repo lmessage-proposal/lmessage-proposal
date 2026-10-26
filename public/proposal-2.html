@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="description" content="提案2: 設定のつながりを見えるようにする">
+<title>提案2 設定のつながりを見えるようにする｜L Message 改善提案</title>
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">L Message 改善提案 <span>／ 適性テスト提出物</span></a>
+    <nav class="site">
+      <a href="/">概要</a>
+      <a href="/proposal-1">提案1 配信前確認</a>
+      <a href="/proposal-2" aria-current="page">提案2 つながり</a>
+      <a href="/proposal-3">提案3 ひな形</a>
+      <a href="/scope">前提と調査範囲</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap prose">
+
+  <span class="kicker">提案 2 ／ 段階導入を提案</span>
+  <h1>設定のつながりを見えるようにする</h1>
+  <p class="lede">
+    「このタグ、消していいんでしたっけ」に答えられる画面を作ります。
+    L Message の設定は互いに呼び合う作りになっていますが、
+    <strong>呼ばれている側から「誰に呼ばれているか」を見る手段がありません</strong>。
+    その結果、使っていない設定も消せなくなり、増え続けます。
+  </p>
+
+  <div class="toc">
+    <div class="h">このページの内容</div>
+    <ol>
+      <li><a href="#problem">具体的な課題点</a></li>
+      <li><a href="#solution">改善の内容と方法</a></li>
+      <li><a href="#figure">図: 現状と改善後</a></li>
+      <li><a href="#existing">既存機能との重複確認</a></li>
+      <li><a href="#feasibility">実現可能性と工数</a></li>
+      <li><a href="#questions">実装する場合の確認事項</a></li>
+    </ol>
+  </div>
+
+  <h2 id="problem">1. 具体的な課題点</h2>
+
+  <h3>前提: L Message の設定は、互いに呼び合う作りになっている</h3>
+  <p>
+    公式マニュアル「エルメアクションと友だちアクションの設定方法」には、こう書かれています。
+  </p>
+  <blockquote class="note plain">
+    <p style="margin:0">
+      「50 弱の『1.トリガー』から呼び出し、40 以上の多彩な動作（『2.アクション』）をさせることができます。
+      <strong>2 つの組み合わせだけで 2000 パターン以上あります</strong>」
+    </p>
+  </blockquote>
+  <p>
+    つまり、タグ・ステップ配信・リッチメニュー・友だち情報といった設定は、
+    1:1 チャット、自動応答、メッセージ配信、フォーム回答、QR コードアクション、各種予約、商品販売など
+    <strong>16 の機能から呼び出される</strong>ようになっています。これは機能として強力です。
+  </p>
+  <p>
+    問題は、<strong>この呼び出し関係を、呼ばれている側から確認する手段が見当たらない</strong>ことです。
+    その状況を、3 つに分けて説明します。
+  </p>
+
+  <h3>課題 2-1: 「このタグはどこで使われているか」が見られない</h3>
+  <p>
+    公式マニュアルによると、タグ一覧に表示されるのは <strong>タグ管理名／友だち数／フォルダ／コピー／削除</strong> です。
+    「友だち数」をクリックすると、そのタグが付いている友だちの一覧は見られます。
+  </p>
+  <p>
+    つまり <strong>「誰に付いているか」は見えますが、「どの設定が付けているか」「どの設定が条件に使っているか」は見えません。</strong>
+    これは友だち情報、ステップ配信、リッチメニューについても同じです。
+  </p>
+  <div class="note warn">
+    <p style="margin:0">
+      傍証として、<strong>公式はトリガーとアクションの対応表を、製品の外にある Google スプレッドシートで配布しています</strong>
+      （マニュアル内から「呼び出し元トリガー・アクション一覧」としてリンクされています）。
+      これは「どの機能からどのアクションを呼べるか」という一般的な対応表であり、
+      「このアカウントの、このタグが、どこで使われているか」を示すものではありません。
+      つながりの全体像を把握するために、利用者が製品の外の表を開いて読み合わせている状態だと考えられます。
+    </p>
+  </div>
+
+  <h3>課題 2-2: 消すのが怖い → 消せない → 増え続ける</h3>
+  <p>
+    公式マニュアルは、設定どうしの関係を利用者が自分で管理することを前提に、こう注意しています。
+  </p>
+  <blockquote class="note plain">
+    <p style="margin:0">
+      「たとえば、『タグが追加されたら、ステップを配信する』という設定を行っていて、配信を停止する場合は、
+      ステップ配信を停止するトリガーに配信停止のアクションを設定する必要があります。
+      <strong>この場合、タグを外すだけではステップ配信は停止されないことにご注意ください。</strong>」
+    </p>
+  </blockquote>
+  <p>
+    この注意が成り立つのは、<strong>利用者が「そのタグが何に繋がっていたか」を覚えている場合だけ</strong>です。
+    半年前に自分が作った設定、あるいは前任者が作った設定については成り立ちません。
+  </p>
+  <p>
+    さらに、公式マニュアルを確認した範囲では、<strong>タグの削除時に影響範囲を知らせる警告についての記述が見当たりませんでした</strong>
+    （「…」から個別削除、チェックボックスで一括削除、という手順のみの記載です）。
+    一方で、ステップ配信のメッセージ一括削除やクロス分析の削除には
+    「一度削除すると元に戻すことは出来ません」「復元できませんので十分ご注意ください」という警告が明記されています。
+    <strong>警告を出す文化はあるのに、「何に影響するか」までは出していない</strong>という状態です。
+  </p>
+  <p>
+    タグは「＋新規作成」で一度に最大 20 個、CSV なら一度に最大 200 個作れます。作るのは簡単で、消すのは怖い。
+    この非対称が、運用が続くほど効いてきます。
+  </p>
+
+  <h3>課題 2-3: 機能どうしの優先順位が、画面ではなくマニュアルにしか書かれていない</h3>
+  <p>
+    公式マニュアルには、ある設定が別の設定を上書きするルールが複数書かれています。たとえば:
+  </p>
+  <div class="table-scroll">
+  <table>
+    <caption>いずれも公式マニュアルに明記されているルール。問題は、これらが<strong>設定画面を見ても分からない</strong>ことです。</caption>
+    <thead><tr><th>ルール</th><th>どこに書かれているか</th></tr></thead>
+    <tbody>
+      <tr><td>QR コードアクションでステップ配信を設定している場合、あいさつメッセージで設定しているステップ配信は実行されない</td><td>QR コードアクションのマニュアル</td></tr>
+      <tr><td>コース側にアクションが設定されている場合、全体設定の予約時アクションは稼働しない</td><td>レッスン予約・サロン予約のマニュアル</td></tr>
+      <tr><td>イベント予約では、予約枠とコースの<strong>どちらか一方</strong>のアクションしか稼働しない</td><td>イベント予約のマニュアル</td></tr>
+      <tr><td>複数のアクションが設定されている場合、<strong>必ずしも上から順に実行されるわけではない</strong></td><td>エルメアクションのマニュアル</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    あいさつメッセージの画面でステップ配信を設定した人は、その画面を見ている限り、
+    <strong>その設定が一部の友だちには効かないことを知る機会がありません</strong>。
+    マニュアルの別のページを読んで初めて分かります。これは「読まない人が悪い」で済ませられる種類の落とし穴ではないと考えます。
+  </p>
+
+  <h2 id="solution">2. 改善の内容と方法</h2>
+
+  <p>
+    方針は <strong>「設定を書き換えず、表示だけを足す」</strong> です。
+    既存の設定内容には一切手を触れません。後から取り下げやすく、既存アカウントへの影響が出ない形にします。
+  </p>
+
+  <h3>第 1 段: 使用箇所の表示と、削除時の警告</h3>
+
+  <ol>
+    <li>
+      <strong>各設定の詳細に「使用箇所」を表示する</strong><br>
+      タグの詳細画面に、次の 3 区分で一覧を出します。
+      <ul>
+        <li><strong>このタグを付ける設定</strong>（例: QR コードアクション「店頭ポスター」、フォーム「来店アンケート」）</li>
+        <li><strong>このタグを外す設定</strong></li>
+        <li><strong>このタグを条件に使っている設定</strong>（例: ステップ配信「初回来店フォロー」の絞り込み、リッチメニュー「会員向け」の表示条件）</li>
+      </ul>
+      それぞれ機能名と設定名を並べ、クリックでその設定画面へ移動できるようにします。
+      同じものを、ステップ配信・リッチメニュー・友だち情報の詳細にも用意します。
+    </li>
+    <li>
+      <strong>削除・停止のときに、影響を具体的に出す</strong><br>
+      いまの「本当に削除しますか」を、次のように変えます。<br>
+      <span style="display:block;background:var(--card-sunk);border:1px solid var(--line);border-radius:8px;padding:12px 15px;margin:10px 0;font-size:14.5px">
+        タグ「来店済み」を削除します。<br>
+        このタグは <strong>5 つの設定から使われています</strong>。<br>
+        ・条件に使っている: ステップ配信「再来店フォロー」／リッチメニュー「会員向け」<br>
+        ・付与している: QR コードアクション「店頭ポスター」／フォーム「来店アンケート」／自動応答「予約」<br>
+        削除すると、<strong>ステップ配信「再来店フォロー」の配信対象は 0 人になります</strong>。
+      </span>
+      ここで削除を禁止するかどうかは、運用側のご判断を伺いたい点です（後述の確認事項）。
+      <strong>まずは「止めずに知らせる」</strong>のが安全だと考えています。
+    </li>
+    <li>
+      <strong>一覧に「使用箇所」列を足す</strong><br>
+      タグ一覧に「使用箇所 5 件」のような列を 1 つ加えます。
+      <strong>0 件のものが、安心して消せる候補</strong>です。これだけで棚卸しが始められます。
+    </li>
+  </ol>
+
+  <h3>第 2 段: 全体像と、上書きルールの警告</h3>
+
+  <ol start="4">
+    <li>
+      <strong>つながりマップ</strong><br>
+      「入口（QR コードアクション・フォーム・友だち追加）→ タグ・友だち情報 → 反応（ステップ配信・リッチメニュー・自動応答）」の流れを 1 枚の図にします。
+      <strong>これは完全に新しい発想ではありません。</strong>
+      QR コードアクションにはすでに「分岐詳細」があり、公式マニュアルは
+      「マインドマップ風にどこから流入して、どこまで稼働したかを詳細を確認することができます」と説明しています。
+      <strong>その考え方を、1 つの QR コードではなくアカウント全体に広げる</strong>のがこの項目です。
+    </li>
+    <li>
+      <strong>上書きルールの警告を、該当する画面に出す</strong><br>
+      課題 2-3 のルールに当てはまる設定の組み合わせを検出したら、その場で知らせます。<br>
+      例: あいさつメッセージの画面に「QR コードアクション 3 件にもステップ配信が設定されています。
+      その QR から追加された友だちには、このステップ配信は実行されません」。<br>
+      <strong>ルールは公式マニュアルにすでに書かれているものだけを対象にします。</strong>新しい挙動は作りません。
+    </li>
+    <li>
+      <strong>使われていない設定の棚卸しリスト</strong><br>
+      「どの設定からも参照されておらず、90 日間 1 件も付与されていないタグ」を一覧で出します。
+      まとめて削除できるようにします。
+    </li>
+  </ol>
+
+  <h3>やらないこと</h3>
+  <ul>
+    <li><strong>自動で消さない。</strong>棚卸しリストは候補を出すだけで、削除は必ず人が判断します。</li>
+    <li><strong>上書きルールの挙動そのものは変えない。</strong>見えるようにするだけです。挙動を変えると既存アカウントの動きが変わってしまいます。</li>
+    <li><strong>第 1 段で全機能を対象にしない。</strong>まずタグ・ステップ配信・リッチメニュー・友だち情報の 4 つに絞ります。</li>
+  </ul>
+
+  <h2 id="figure">3. 図</h2>
+
+  <figure>
+    <div class="fig-body">
+      <svg viewBox="0 0 680 330" width="680" height="330" role="img"
+           aria-label="現状のタグ一覧には友だち数しか表示されないのに対し、改善後は使用箇所の件数が並び、詳細を開くとどの設定から使われているかの一覧が見られることを示した比較図。">
+        <title>タグ一覧の現状と改善後</title>
+
+        <text x="0" y="14" font-size="12" font-weight="700" class="bad">現状のタグ一覧</text>
+        <rect x="0" y="24" width="300" height="118" rx="6" class="s-bg"/>
+        <rect x="0" y="24" width="300" height="118" rx="6" class="s-line"/>
+        <rect x="0" y="24" width="300" height="24" rx="6" class="s-sunk"/>
+        <line x1="0" y1="48" x2="300" y2="48" class="s-line"/>
+        <text x="12" y="40" font-size="10.5" class="dim">タグ管理名</text>
+        <text x="180" y="40" font-size="10.5" class="dim">友だち数</text>
+        <text x="250" y="40" font-size="10.5" class="dim">操作</text>
+        <text x="12" y="67" font-size="11">来店済み</text><text x="180" y="67" font-size="11" class="soft">142</text><text x="250" y="67" font-size="11" class="dim">…</text>
+        <line x1="8" y1="76" x2="292" y2="76" class="s-line"/>
+        <text x="12" y="94" font-size="11">配信停止希望</text><text x="180" y="94" font-size="11" class="soft">8</text><text x="250" y="94" font-size="11" class="dim">…</text>
+        <line x1="8" y1="103" x2="292" y2="103" class="s-line"/>
+        <text x="12" y="121" font-size="11">キャンペーン2025春</text><text x="180" y="121" font-size="11" class="soft">0</text><text x="250" y="121" font-size="11" class="dim">…</text>
+
+        <text x="0" y="166" font-size="11" class="bad">「誰に付いているか」は分かる。「どの設定が使っているか」は分からない。</text>
+        <text x="0" y="184" font-size="11" class="bad">→ 友だち数 0 のタグさえ、消していいか判断できない。</text>
+
+        <!-- 矢印 -->
+        <text x="340" y="88" font-size="22" class="dim" text-anchor="middle">→</text>
+
+        <text x="380" y="14" font-size="12" font-weight="700" class="good">改善後のタグ一覧</text>
+        <rect x="380" y="24" width="300" height="118" rx="6" class="s-bg"/>
+        <rect x="380" y="24" width="300" height="118" rx="6" class="s-line"/>
+        <rect x="380" y="24" width="300" height="24" rx="6" class="s-sunk"/>
+        <line x1="380" y1="48" x2="680" y2="48" class="s-line"/>
+        <text x="392" y="40" font-size="10.5" class="dim">タグ管理名</text>
+        <text x="520" y="40" font-size="10.5" class="dim">友だち数</text>
+        <text x="580" y="40" font-size="10.5" font-weight="700" class="acc">使用箇所</text>
+        <text x="392" y="67" font-size="11">来店済み</text><text x="520" y="67" font-size="11" class="soft">142</text><text x="580" y="67" font-size="11" class="acc" font-weight="700">5 件</text>
+        <line x1="388" y1="76" x2="672" y2="76" class="s-line"/>
+        <text x="392" y="94" font-size="11">配信停止希望</text><text x="520" y="94" font-size="11" class="soft">8</text><text x="580" y="94" font-size="11" class="acc" font-weight="700">2 件</text>
+        <line x1="388" y1="103" x2="672" y2="103" class="s-line"/>
+        <text x="392" y="121" font-size="11">キャンペーン2025春</text><text x="520" y="121" font-size="11" class="soft">0</text><text x="580" y="121" font-size="11" class="good" font-weight="700">0 件</text>
+        <text x="632" y="121" font-size="10" class="good">消せる</text>
+
+        <!-- 詳細 -->
+        <text x="380" y="168" font-size="11" font-weight="700" class="soft">「5 件」をクリックすると</text>
+        <rect x="380" y="178" width="300" height="134" rx="6" class="s-good-bg"/>
+        <rect x="380" y="178" width="300" height="134" rx="6" class="s-good-s" stroke-width="1"/>
+        <text x="392" y="197" font-size="11" font-weight="700">タグ「来店済み」の使用箇所</text>
+        <text x="392" y="216" font-size="10" class="dim">条件に使っている設定</text>
+        <text x="400" y="232" font-size="10.5">ステップ配信「再来店フォロー」</text>
+        <text x="400" y="247" font-size="10.5">リッチメニュー「会員向け」</text>
+        <text x="392" y="267" font-size="10" class="dim">このタグを付ける設定</text>
+        <text x="400" y="283" font-size="10.5">QRコードアクション「店頭ポスター」</text>
+        <text x="400" y="298" font-size="10.5">フォーム「来店アンケート」ほか 1 件</text>
+
+        <text x="0" y="214" font-size="11" class="dim">足すのは「使用箇所」列と、その詳細表示だけ。</text>
+        <text x="0" y="232" font-size="11" class="dim">既存の設定の中身は書き換えません。</text>
+        <text x="0" y="258" font-size="11" class="good" font-weight="700">削除時には影響を具体的に出す:</text>
+        <text x="0" y="276" font-size="10.5" class="soft">「削除すると、ステップ配信『再来店フォロー』の</text>
+        <text x="0" y="292" font-size="10.5" class="soft">配信対象は 0 人になります」</text>
+      </svg>
+    </div>
+    <figcaption>
+      図 2-1: タグ一覧の比較。列名は公式マニュアルに記載されている項目（タグ管理名・友だち数・フォルダ・コピー・削除）に合わせています。
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="fig-body">
+      <svg viewBox="0 0 680 310" width="680" height="310" role="img"
+           aria-label="入口となるQRコードアクションやフォームからタグが付与され、そのタグを条件にステップ配信やリッチメニューが動く、という繋がりを図にしたもの。">
+        <title>つながりマップのイメージ</title>
+        <defs>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <text x="40" y="18" font-size="11" font-weight="700" class="dim" text-anchor="middle">入口</text>
+        <text x="300" y="18" font-size="11" font-weight="700" class="dim" text-anchor="middle">目印（タグ・友だち情報）</text>
+        <text x="570" y="18" font-size="11" font-weight="700" class="dim" text-anchor="middle">反応</text>
+        <line x1="0" y1="26" x2="680" y2="26" class="s-line"/>
+
+        <!-- 入口 -->
+        <rect x="0" y="44" width="152" height="40" rx="5" class="s-sunk"/><rect x="0" y="44" width="152" height="40" rx="5" class="s-line"/>
+        <text x="10" y="60" font-size="10" class="dim">QRコードアクション</text><text x="10" y="76" font-size="11">店頭ポスター</text>
+
+        <rect x="0" y="100" width="152" height="40" rx="5" class="s-sunk"/><rect x="0" y="100" width="152" height="40" rx="5" class="s-line"/>
+        <text x="10" y="116" font-size="10" class="dim">フォーム作成</text><text x="10" y="132" font-size="11">来店アンケート</text>
+
+        <rect x="0" y="156" width="152" height="40" rx="5" class="s-sunk"/><rect x="0" y="156" width="152" height="40" rx="5" class="s-line"/>
+        <text x="10" y="172" font-size="10" class="dim">自動応答</text><text x="10" y="188" font-size="11">「予約」</text>
+
+        <!-- 中央 -->
+        <rect x="228" y="70" width="144" height="40" rx="5" class="s-accent-bg"/><rect x="228" y="70" width="144" height="40" rx="5" class="s-accent-s" stroke-width="1.5"/>
+        <text x="238" y="86" font-size="10" class="dim">タグ</text><text x="238" y="102" font-size="11.5" font-weight="700">来店済み</text>
+        <text x="362" y="86" font-size="10" class="acc" text-anchor="end">142 人</text>
+
+        <rect x="228" y="140" width="144" height="40" rx="5" class="s-sunk"/><rect x="228" y="140" width="144" height="40" rx="5" class="s-line"/>
+        <text x="238" y="156" font-size="10" class="dim">友だち情報</text><text x="238" y="172" font-size="11.5">最終来店日</text>
+
+        <!-- 反応 -->
+        <rect x="448" y="44" width="152" height="40" rx="5" class="s-sunk"/><rect x="448" y="44" width="152" height="40" rx="5" class="s-line"/>
+        <text x="458" y="60" font-size="10" class="dim">ステップ配信</text><text x="458" y="76" font-size="11">再来店フォロー</text>
+
+        <rect x="448" y="100" width="152" height="40" rx="5" class="s-sunk"/><rect x="448" y="100" width="152" height="40" rx="5" class="s-line"/>
+        <text x="458" y="116" font-size="10" class="dim">リッチメニュー</text><text x="458" y="132" font-size="11">会員向け</text>
+
+        <rect x="448" y="156" width="152" height="40" rx="5" class="s-sunk"/><rect x="448" y="156" width="152" height="40" rx="5" class="s-line"/>
+        <text x="458" y="172" font-size="10" class="dim">リマインド配信</text><text x="458" y="188" font-size="11">3か月後のご案内</text>
+
+        <!-- 線 -->
+        <g style="color:var(--accent)">
+          <path d="M152,64 C195,64 195,88 226,88" class="s-accent-s" stroke-width="1.5" marker-end="url(#ar2)"/>
+          <path d="M152,120 C195,120 195,92 226,92" class="s-accent-s" stroke-width="1.5" marker-end="url(#ar2)"/>
+          <path d="M152,176 C195,176 195,96 226,96" class="s-accent-s" stroke-width="1.5" marker-end="url(#ar2)"/>
+          <path d="M372,84 C410,84 410,64 446,64" class="s-accent-s" stroke-width="1.5" marker-end="url(#ar2)"/>
+          <path d="M372,92 C410,92 410,120 446,120" class="s-accent-s" stroke-width="1.5" marker-end="url(#ar2)"/>
+        </g>
+        <g style="color:var(--ink-faint)">
+          <path d="M372,160 C410,160 410,176 446,176" class="s-stroke" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar2)"/>
+        </g>
+        <text x="186" y="52" font-size="9.5" class="acc">付ける</text>
+        <text x="400" y="48" font-size="9.5" class="acc">条件に使う</text>
+
+        <line x1="0" y1="222" x2="680" y2="222" class="s-line"/>
+        <text x="0" y="244" font-size="11" class="dim">左から右に 1 本道で読める形にします。タグをクリックすると、そのタグに繋がる線だけが強調されます。</text>
+        <text x="0" y="262" font-size="11" class="dim">どこからも線が来ていない設定（孤立した設定）は、薄く表示して棚卸しの候補として示します。</text>
+        <text x="0" y="286" font-size="11" class="soft">※ QR コードアクションにはすでに「分岐詳細」というマインドマップ風の表示があります。</text>
+        <text x="0" y="302" font-size="11" class="soft">　 この図は、その考え方を 1 つの QR コードではなくアカウント全体に広げたものです。</text>
+      </svg>
+    </div>
+    <figcaption>
+      図 2-2: つながりマップ（第 2 段）のイメージ。機能名はすべて L Message の正式名称に合わせています。
+    </figcaption>
+  </figure>
+
+  <h2 id="existing">4. 既存機能との重複確認</h2>
+
+  <div class="table-scroll">
+  <table>
+    <caption>
+      ◯ = すでにある ／ △ = 部分的にある ／ ✕ = 公式マニュアル・公式 FAQ・マニュアル内検索のいずれにも記述が見つからなかった。
+      ✕ は「存在しない」の断定ではありません。詳しくは <a href="/scope">前提と調査範囲</a>。
+    </caption>
+    <thead><tr><th>本提案の要素</th><th>既存</th><th>確認した内容</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>設定内容の一覧表示</td>
+        <td><span class="badge mid">△ 2 機能のみ</span></td>
+        <td>リッチメニュー一覧には「タップエリアごとに、どのアクションが設定されているかを一覧で確認できます」とあり、QR コードアクション一覧にも「設定済みアクション」がある。<strong>ただしどちらも順引き（その設定が何をするか）</strong>で、逆引きではない。</td>
+      </tr>
+      <tr>
+        <td>つながりの図示</td>
+        <td><span class="badge mid">△ 1 機能のみ</span></td>
+        <td>QR コードアクションの「分岐詳細」が「マインドマップ風に」流入と稼働を表示する。<strong>1 つの QR コードの中に閉じており、アカウント全体ではない。</strong>本提案の第 2 段は、この考え方の適用範囲を広げるもの。</td>
+      </tr>
+      <tr>
+        <td>タグから友だちを見る</td>
+        <td><span class="badge lo">◯ ある</span></td>
+        <td>タグ一覧の「友だち数」クリックで該当友だちを一覧できる。<strong>本提案はこれと別軸（設定からの参照）</strong>で、置き換えではない。</td>
+      </tr>
+      <tr>
+        <td>トリガーとアクションの対応表</td>
+        <td><span class="badge mid">△ 製品の外にある</span></td>
+        <td>公式が Google スプレッドシートで「呼び出し元トリガー・アクション一覧」を配布。<strong>機能の一般論であり、個別アカウントの設定は分からない。</strong></td>
+      </tr>
+      <tr>
+        <td><strong>逆引き（この設定はどこから使われているか）</strong></td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>マニュアル内検索で「使用中」「どこで使」はいずれも 0 件。公式 FAQ にも該当設問なし。</td>
+      </tr>
+      <tr>
+        <td>削除時の影響範囲の表示</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>「元に戻せません」型の警告は複数ある（ステップ配信のメッセージ一括削除、クロス分析、友だちの登録情報など）が、<strong>「何件の設定に影響するか」を示すものは見つからなかった</strong>。タグ削除時の警告についてはマニュアルに記述自体がない。</td>
+      </tr>
+      <tr>
+        <td>上書きルールの画面上の警告</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>ルール自体は公式マニュアルに明記されているが、<strong>該当する設定をしている画面に警告を出す仕組みの記述はない</strong>。</td>
+      </tr>
+      <tr>
+        <td>使われていない設定の棚卸し</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>記述なし。なお QR コードアクションとレッスン予約の削除済みデータは「90 日後に自動削除」という仕組みがあり、<strong>期間での自動整理という考え方自体は製品内にある</strong>。</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <p style="margin:0">
+      <strong>補足:</strong> 2026 年 9 月のアップデートで
+      「タグ管理やリッチメニュー登録時の管理名が重複して登録できない仕様に変更」が入っています。
+      重複禁止になったのが<strong>「他の機能から名前で選ばれる側」の 2 つだった</strong>ことは、
+      設定どうしの参照を分かりやすくする方向に、すでに関心が向いていることの表れだと受け取りました。
+      本提案はその延長線上にあるつもりです。
+    </p>
+  </div>
+
+  <h2 id="feasibility">5. 実現可能性と工数</h2>
+
+  <h3>技術的に可能か</h3>
+  <p>
+    <strong>可能だと考えますが、提案 1 より不確実性が高いです。</strong>正直に書きます。
+  </p>
+  <ul>
+    <li>
+      <strong>情報そのものは必ず存在します。</strong>
+      ステップ配信がタグを条件に使えている以上、「どのタグを使うか」はどこかに保存されています。
+      新しくデータを集め始める必要はなく、<strong>すでにあるものを逆から引けるようにする</strong>話です。
+    </li>
+    <li>
+      <strong>不確実なのは「どう保存されているか」です。</strong>
+      16 の機能それぞれがタグを参照しており、参照の持ち方が機能ごとに違う場合、
+      逆引きは機能の数だけ個別対応が必要になります。工数の幅（9〜13 人日）はここから来ています。
+    </li>
+    <li>
+      <strong>重くなった場合の逃げ道はあります。</strong>
+      毎回その場で数え直すのが重いなら、1 日 1 回まとめて集計して保持し、設定の保存時に該当分だけ更新する、という形にできます。
+      その場合「最終更新: 今日 3:00」を画面に併記して、数字がいつ時点のものか分かるようにします。
+      <strong>リアルタイムであることは、この機能の価値にとって必須ではありません。</strong>
+    </li>
+    <li>外部サービスの追加は不要です。</li>
+  </ul>
+
+  <h3>リソース面で可能か</h3>
+  <ul>
+    <li>追加の月額費用は発生しません。</li>
+    <li>第 1 段は既存画面への列・タブ・ダイアログの追加で、新しい画面設計はほぼ不要です。</li>
+    <li>第 2 段のつながりマップは<strong>新規の画面デザインが必要</strong>で、デザイナーの工数が別途かかります（下の見積もりには含めていません）。</li>
+  </ul>
+
+  <h3>工数の見積もり</h3>
+
+  <div class="effort">
+    <span class="big">9〜13</span><span class="unit">人日（第 1 段）</span>
+    <span style="color:var(--line)">｜</span>
+    <span class="big">8〜13</span><span class="unit">人日（第 2 段）</span>
+  </div>
+
+  <div class="table-scroll">
+  <table>
+    <caption>1 人日の定義と前提は <a href="/scope">前提と調査範囲</a> に記載しています。</caption>
+    <thead><tr><th>内容</th><th class="num">人日</th><th>根拠</th></tr></thead>
+    <tbody>
+      <tr><td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">第 1 段: これだけでも「消せない」は解ける</td></tr>
+      <tr><td>参照関係を集める仕組み（16 のトリガー元から、タグ・ステップ配信・リッチメニュー・友だち情報への参照を拾う）</td><td class="num">4.0〜6.0</td><td><strong>ここが最大の塊で、幅も最大。</strong>参照の持ち方が共通なら 4 人日、機能ごとにばらばらなら 1 機能あたり 0.3 人日前後で 6 人日。着手前に 1 日いただいて調べれば、幅は詰められます</td></tr>
+      <tr><td>「使用箇所」表示（タグ・ステップ配信・リッチメニュー・友だち情報の 4 種）</td><td class="num">2.0〜3.0</td><td>表示の形は 4 種とも同じ。1 種あたり 0.5〜0.7 人日</td></tr>
+      <tr><td>削除時の影響つき確認ダイアログ</td><td class="num">1.5〜2.0</td><td>上の仕組みができていれば表示するだけ。「配信対象が 0 人になります」のような影響の言い換えに手間がかかる</td></tr>
+      <tr><td>一覧への「使用箇所」列の追加</td><td class="num">1.0</td><td>一覧の件数分を一度にまとめて数える必要があり、1 件ずつ数えると重くなる点への対処を含む</td></tr>
+      <tr><td>テストと調整</td><td class="num">1.0〜1.5</td><td>設定の種類が多く、参照の拾い漏れがないかの確認に時間を取る</td></tr>
+      <tr><td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">第 2 段: 第 1 段が使われていることを確認してから</td></tr>
+      <tr><td>つながりマップ</td><td class="num">4.0〜7.0</td><td>設定数が多いアカウントでも読める配置にすることが難所。<strong>デザイン工数は含みません</strong></td></tr>
+      <tr><td>上書きルールの警告（公式マニュアル記載のルールのみ）</td><td class="num">2.0〜3.0</td><td>対象ルールは確認できた範囲で 4 件。1 件あたり 0.5 人日前後＋文言の調整</td></tr>
+      <tr><td>棚卸しリストと一括削除</td><td class="num">1.0〜1.5</td><td>第 1 段の仕組みをそのまま使える</td></tr>
+      <tr><td>テストと調整</td><td class="num">1.0〜1.5</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <p style="margin:0">
+      <strong>見積もりの最大の不確実要素。</strong>
+      「参照関係を集める仕組み」が 4 人日で済むか 6 人日かかるかは、
+      既存の作りを見ないと分かりません。<strong>本格的な見積もりの前に 1 日だけ調査の時間をいただけると、幅をかなり詰められます。</strong>
+      逆に、もし参照がすでに共通の形で保存されているなら、第 1 段は 9 人日を下回る可能性もあります。
+    </p>
+  </div>
+
+  <h2 id="questions">6. 実装する場合の確認事項</h2>
+
+  <h4>仕様を決める前に伺いたいこと</h4>
+  <ul class="check">
+    <li>タグが 100 個を超えているアカウントは、全体のどのくらいありますか。少ないなら、この提案の優先度は下げるべきだと考えます。</li>
+    <li>「使われているタグは削除できない」とすべきか、「警告は出すが削除はできる」とすべきか。後者から始めるのが安全だと考えていますが、サポートへの問い合わせ状況から判断いただけると助かります。</li>
+    <li>第 1 段の対象を 4 種（タグ・ステップ配信・リッチメニュー・友だち情報）に絞る案ですが、現場で最も「消せなくて困っている」のはどれでしょうか。1 種類に絞ってさらに小さく出すこともできます。</li>
+    <li>公式が配布している「呼び出し元トリガー・アクション一覧」のスプレッドシートは、今後も製品外で維持する方針でしょうか。製品内に取り込む構想があるなら、本提案とまとめた方がよいと考えます。</li>
+  </ul>
+
+  <h4>実装前に調べたいこと</h4>
+  <ul class="check">
+    <li>16 の機能が、タグ・ステップ配信・リッチメニューをそれぞれどう参照しているか。共通の形か、機能ごとに違うか。<strong>ここが工数を決めます。</strong></li>
+    <li>設定数が多いアカウントで、逆引きの集計にどのくらい時間がかかるか。重ければ即時をやめて 1 日 1 回の集計に切り替えます。</li>
+    <li>削除時に「配信対象が 0 人になります」と言い切ってよいか（他の条件との組み合わせによっては 0 人にならない場合があるため、断定できないなら書き方を変えます）。</li>
+  </ul>
+
+  <h4>運用側に確認したいこと</h4>
+  <ul class="check">
+    <li>この機能で減らしたいのは、サポートへの問い合わせでしょうか、解約理由でしょうか。測る対象が変われば、作る順番も変わります。</li>
+    <li>棚卸しリストの「90 日間使われていない」という基準は妥当でしょうか。季節商材を扱うアカウントでは、1 年に 1 度しか使わないタグが正常に存在します。</li>
+    <li>代理店・運用代行の方が複数アカウントを管理されている場合、この画面に求めるものは店舗オーナーとは違うはずです。どちらを主な対象にすべきでしょうか。</li>
+  </ul>
+
+  <div class="pager">
+    <a href="/proposal-1">← 提案 1 配信前の確認画面</a>
+    <a href="/proposal-3">提案 3 業種別のひな形 →</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>株式会社ミショナ ITエンジニア職 適性テスト提出物 ／ 2026年10月26日</p>
+    <p>本サイトは選考のための限定公開です。検索エンジンには登録されません（<code>noindex</code> 指定済み）。</p>
+    <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
+  </div>
+</footer>
+
+</body>
+</html>

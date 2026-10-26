@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="description" content="提案3: 業種別のひな形を用意する">
+<title>提案3 業種別のひな形を用意する｜L Message 改善提案</title>
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">L Message 改善提案 <span>／ 適性テスト提出物</span></a>
+    <nav class="site">
+      <a href="/">概要</a>
+      <a href="/proposal-1">提案1 配信前確認</a>
+      <a href="/proposal-2">提案2 つながり</a>
+      <a href="/proposal-3" aria-current="page">提案3 ひな形</a>
+      <a href="/scope">前提と調査範囲</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap prose">
+
+  <span class="kicker">提案 3 ／ 開発より先に体制の確認が必要</span>
+  <h1>業種別のひな形を用意する</h1>
+  <p class="lede">
+    業種を 1 つ選ぶと、その業種で実際に使う<strong>タグ・友だち情報・リッチメニュー・ステップ配信・リマインドが一式入った状態</strong>から始められるようにします。
+    要点は「見た目のデザイン集」ではないことです。<strong>業種が違うと、必要な設定の構成そのものが違います。</strong>
+  </p>
+
+  <div class="toc">
+    <div class="h">このページの内容</div>
+    <ol>
+      <li><a href="#problem">具体的な課題点</a></li>
+      <li><a href="#why">なぜ「色違いのデザイン集」では解けないのか</a></li>
+      <li><a href="#solution">改善の内容と方法</a></li>
+      <li><a href="#figure">図: 現状と改善後</a></li>
+      <li><a href="#existing">既存機能との重複確認</a></li>
+      <li><a href="#feasibility">実現可能性と工数</a></li>
+      <li><a href="#questions">実装する場合の確認事項</a></li>
+    </ol>
+  </div>
+
+  <h2 id="problem">1. 具体的な課題点</h2>
+
+  <h3>課題 3-1: 登録直後、何から手を付ければいいか分からない</h3>
+  <p>
+    L Message に登録して LINE 公式アカウントを接続すると、管理画面には
+    タグ管理・ステップ配信・リッチメニュー・自動応答・フォーム作成・各種予約が並びます。
+    公式が挙げている機能だけで 30 以上あります。
+  </p>
+  <p>
+    「どれから設定すればいいか」ではなく、本当に分からないのは <strong>「自分の店では、何をタグにすべきか」</strong> です。
+    これは機能の使い方の問題ではなく、<strong>自分の商売を設定の形に翻訳する</strong>作業で、
+    マニュアルを読んでも答えが書いていない種類の作業です。
+  </p>
+
+  <h3>課題 3-2: 既存の「テンプレート」は、自分で作ったものを使い回す仕組み</h3>
+  <p>
+    L Message には「テンプレート」機能があります。公式マニュアルの定義はこうです。
+  </p>
+  <blockquote class="note plain">
+    <p style="margin:0">「テンプレート機能とは、<strong>事前に作成したメッセージを使いまわせる機能</strong>です。」</p>
+  </blockquote>
+  <p>
+    つまり <strong>自分で作ったものを再利用する仕組み</strong>であり、最初から中身が入っているひな形集ではありません。
+    同じマニュアルには「作成するとよいテンプレート」として文例が 7 種（お礼／キャンセル／現在応答不可／予約受付／営業時間／所在地・電話番号／資料請求）載っていますが、
+    これは<strong>読んで自分で打ち込む文章</strong>で、押せば入るデータではありません。自動応答のマニュアルも同様に文例 3 種が文章で載っています。
+  </p>
+  <p>
+    リッチメニューについては「レイアウトは 12 種類のテンプレートから選択可能です」とあり、
+    アイコン検索や背景設定もあります。ただしこれは<strong>画面の分割パターンとパーツ</strong>であって、
+    業種ごとに「どのボタンを並べるべきか」を示すものではありません。
+  </p>
+  <p>
+    フォームには「よく使われる項目」として名前・メールアドレス・住所・生年月日・電話番号・性別のプリセットがありますが、
+    これも業種に依らない共通項目です。
+  </p>
+  <div class="note warn">
+    <p style="margin:0">
+      整理すると、<strong>部品ごとのひな形はあります。足りないのは、業種の文脈でそれらが繋がった一式です。</strong>
+      なお、ステップ配信（シナリオ）のひな形については、公式マニュアルを確認した範囲では存在を示す記述が見つかりませんでした。
+    </p>
+  </div>
+
+  <h3>課題 3-3: 案内はあるが、「読んで自分で作る」形になっている</h3>
+  <p>
+    公式には充実したチュートリアルがあり、基礎知識・基本設定・応用設定の 3 段構成で、動画と関連マニュアルへのリンクが付いています。
+    新規接続時には「1 ステップずつ順番に設定」（約 15〜20 分）と「クイック接続」（約 5〜10 分）を選べる案内もあります。
+  </p>
+  <p>
+    ただし、この<strong>ウィザードが扱うのは LINE 公式アカウントとの接続部分</strong>で、
+    その後のタグ設計・リッチメニュー・シナリオについては、チュートリアルを読みながら自分で作る形です。
+    <strong>読む量が多いほど、途中で止まる人が増えます。</strong>
+  </p>
+
+  <h2 id="why">2. なぜ「色違いのデザイン集」では解けないのか</h2>
+  <p>
+    業種別テンプレートというと、リッチメニューの配色やボタンの絵柄を業種っぽくしたものを想像されるかもしれません。
+    <strong>それでは課題 3-1 は解けません。</strong>業種によって違うのは見た目ではなく、構成だからです。
+  </p>
+
+  <div class="table-scroll">
+  <table>
+    <caption>
+      3 業種の比較。<strong>並んでいる項目そのものが業種ごとに違う</strong>ことが要点です。
+      ここに書いた内容は、L Message で実現できる設定の範囲内で私が構成した案であり、公式の推奨構成ではありません。
+    </caption>
+    <thead>
+      <tr><th>　</th><th>美容室</th><th>整体・接骨院</th><th>スクール・教室</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>入口</strong><br><span style="font-size:12px;color:var(--ink-faint)">QR コードアクション</span></td>
+        <td>席に置く QR ／ ショップカード</td>
+        <td>施術後の会計時に読む QR</td>
+        <td>体験申込ページ ／ 保護者向けの案内</td>
+      </tr>
+      <tr>
+        <td><strong>最初に取る情報</strong><br><span style="font-size:12px;color:var(--ink-faint)">友だち情報</span></td>
+        <td>前回来店日（年月日）／ 担当者（選択肢）</td>
+        <td>回数券の残回数（ポイント）／ 症状（選択肢）</td>
+        <td>体験日（年月日）／ 学年（選択肢）</td>
+      </tr>
+      <tr>
+        <td><strong>主なタグ</strong></td>
+        <td>来店済み ／ カラー ／ 3 か月未来店</td>
+        <td>回数券あり ／ 通院中断</td>
+        <td>体験済み ／ 入会検討中 ／ 在籍</td>
+      </tr>
+      <tr>
+        <td><strong>自動で動くもの</strong><br><span style="font-size:12px;color:var(--ink-faint)">ステップ配信・友だち情報のアクション</span></td>
+        <td>最終来店から <strong>90 日</strong>で再来店の案内</td>
+        <td>回数券が<strong>残り 1 回</strong>になったら更新の案内</td>
+        <td>体験の<strong>翌日</strong>に入会案内、<strong>7 日後</strong>に再度</td>
+      </tr>
+      <tr>
+        <td><strong>リッチメニュー</strong></td>
+        <td>予約 ／ メニュー料金 ／ 担当者指名 ／ アクセス</td>
+        <td>予約 ／ 回数券の残り ／ 症状の相談 ／ アクセス</td>
+        <td>時間割 ／ 欠席の連絡 ／ 振替の申込 ／ お問い合わせ</td>
+      </tr>
+      <tr>
+        <td><strong>リマインド</strong></td>
+        <td>前日</td>
+        <td>前日＋当日の朝</td>
+        <td>前日＋振替申込の期限前</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>
+    「90 日」「残り 1 回」「翌日と 7 日後」という数字が、それぞれの商売のリズムそのものです。
+    <strong>ここが入った状態で渡せるかどうかが、この提案の価値のすべてです。</strong>
+    配色を業種っぽくしても、この数字は埋まりません。
+  </p>
+
+  <h2 id="solution">3. 改善の内容と方法</h2>
+
+  <h3>仕組み</h3>
+  <ol>
+    <li>
+      <strong>業種を 1 つ選ぶ。</strong>登録直後のほか、設定画面からいつでも呼び出せるようにします。
+    </li>
+    <li>
+      <strong>入る前に、何が作られるかを全部見せる。</strong>
+      「タグ 6 個、友だち情報 3 個、リッチメニュー 1 個、ステップ配信 1 本（3 通）、リマインド 1 件」と一覧で示し、
+      それぞれの中身を開いて確認できるようにします。<strong>確認せずに適用できないようにします。</strong>
+    </li>
+    <li>
+      <strong>既存の設定を上書きしない。追加だけする。</strong>
+      すでに運用中のアカウントに適用しても、いまの設定は一切変わりません。
+      同じ管理名が存在する場合は名前を変えて作ります（2026 年 9 月から、タグとリッチメニューの管理名は重複して登録できない仕様になっているため、ここは必須の配慮です）。
+    </li>
+    <li>
+      <strong>まとめて取り消せるようにする。</strong>
+      このひな形で作られた設定に印を付け、「このひな形で作られたものを全部消す」を 1 操作でできるようにします。
+      <strong>試して合わなければ元に戻せる</strong>ことが、試してもらうための条件だと考えています。
+    </li>
+    <li>
+      <strong>文面は仮であることを明示する。</strong>
+      店名・住所・電話番号など<strong>必ず直すべき箇所を色付きで示し</strong>、「直すべき箇所が 12 か所あります」と件数で出します。
+      ステップ配信は<strong>停止した状態で作られ</strong>、内容を確認して自分で開始する形にします
+      （公式マニュアルにも「ステップ配信を作成しただけでは、配信されません」という注意があり、この挙動と整合します）。
+    </li>
+    <li>
+      <strong>最初の 7 日ガイド。</strong>
+      「1 日目: リッチメニューの文言を直す／2 日目: あいさつメッセージを自分の言葉にする／3 日目: 自分の LINE でテストする」
+      のように、1 日 1 つだけやることを示します。読む量を増やさないことが目的です。
+    </li>
+  </ol>
+
+  <h3>やらないこと</h3>
+  <ul>
+    <li><strong>業種を増やしすぎない。</strong>まず 5 業種に絞ります。中途半端なひな形が 30 業種あるより、作り込んだものが 5 つある方が役に立ちます。</li>
+    <li><strong>自動で開始しない。</strong>適用しただけでは何も配信されません。</li>
+    <li><strong>既存の設定を触らない。</strong>削除も変更もしません。</li>
+  </ul>
+
+  <h2 id="figure">4. 図</h2>
+
+  <figure>
+    <div class="fig-body">
+      <svg viewBox="0 0 680 360" width="680" height="360" role="img"
+           aria-label="現状は空の管理画面からチュートリアルを読んで自分で作る流れであるのに対し、改善後は業種を選び、作られる内容を確認してから一括で適用し、文面を直して開始する流れになることを示した比較図。">
+        <title>初期設定の現状と改善後</title>
+        <defs>
+          <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <text x="0" y="14" font-size="12" font-weight="700" class="bad">現状</text>
+        <g style="color:var(--ink-faint)">
+          <line x1="150" y1="56" x2="168" y2="56" class="s-stroke" stroke-width="1.5" marker-end="url(#ar3)"/>
+          <line x1="298" y1="56" x2="316" y2="56" class="s-stroke" stroke-width="1.5" marker-end="url(#ar3)"/>
+          <line x1="446" y1="56" x2="464" y2="56" class="s-stroke" stroke-width="1.5" marker-end="url(#ar3)"/>
+        </g>
+        <rect x="0" y="30" width="150" height="52" rx="5" class="s-sunk"/><rect x="0" y="30" width="150" height="52" rx="5" class="s-line"/>
+        <text x="10" y="50" font-size="11.5" font-weight="700">LINE 接続</text>
+        <text x="10" y="67" font-size="10.5" class="dim">ここだけウィザードあり</text>
+
+        <rect x="168" y="30" width="130" height="52" rx="5" class="s-sunk"/><rect x="168" y="30" width="130" height="52" rx="5" class="s-line"/>
+        <text x="178" y="50" font-size="11.5" font-weight="700">空の管理画面</text>
+        <text x="178" y="67" font-size="10.5" class="dim">機能が 30 以上並ぶ</text>
+
+        <rect x="316" y="30" width="130" height="52" rx="5" class="s-bad-bg"/><rect x="316" y="30" width="130" height="52" rx="5" class="s-bad-s"/>
+        <text x="326" y="50" font-size="11.5" font-weight="700" class="bad">チュートリアルを読む</text>
+        <text x="326" y="67" font-size="10.5" class="bad">文例は文章で載っている</text>
+
+        <rect x="464" y="30" width="130" height="52" rx="5" class="s-bad-bg"/><rect x="464" y="30" width="130" height="52" rx="5" class="s-bad-s"/>
+        <text x="474" y="50" font-size="11.5" font-weight="700" class="bad">自分で 1 つずつ作る</text>
+        <text x="474" y="67" font-size="10.5" class="bad">何をタグにするか不明</text>
+
+        <text x="610" y="50" font-size="13" class="bad">⟶</text>
+        <text x="610" y="70" font-size="10.5" class="bad">離脱</text>
+
+        <text x="0" y="104" font-size="11" class="dim">読む量が多く、「自分の店では何をタグにすべきか」の答えはどこにも書いていない。</text>
+
+        <line x1="0" y1="126" x2="680" y2="126" class="s-line"/>
+
+        <text x="0" y="152" font-size="12" font-weight="700" class="good">改善後</text>
+        <g style="color:var(--ink-faint)">
+          <line x1="150" y1="194" x2="168" y2="194" class="s-stroke" stroke-width="1.5" marker-end="url(#ar3)"/>
+          <line x1="298" y1="194" x2="316" y2="194" class="s-stroke" stroke-width="1.5" marker-end="url(#ar3)"/>
+          <line x1="446" y1="194" x2="464" y2="194" class="s-stroke" stroke-width="1.5" marker-end="url(#ar3)"/>
+        </g>
+        <rect x="0" y="168" width="150" height="52" rx="5" class="s-sunk"/><rect x="0" y="168" width="150" height="52" rx="5" class="s-line"/>
+        <text x="10" y="188" font-size="11.5" font-weight="700">LINE 接続</text>
+        <text x="10" y="205" font-size="10.5" class="dim">変更なし</text>
+
+        <rect x="168" y="168" width="130" height="52" rx="5" class="s-good-bg"/><rect x="168" y="168" width="130" height="52" rx="5" class="s-good-s" stroke-width="1.5"/>
+        <text x="178" y="188" font-size="11.5" font-weight="700" class="good">業種を 1 つ選ぶ</text>
+        <text x="178" y="205" font-size="10.5" class="good">美容室 / 整体 / 教室 …</text>
+
+        <rect x="316" y="168" width="130" height="52" rx="5" class="s-good-bg"/><rect x="316" y="168" width="130" height="52" rx="5" class="s-good-s" stroke-width="1.5"/>
+        <text x="326" y="188" font-size="11.5" font-weight="700" class="good">作られる内容を確認</text>
+        <text x="326" y="205" font-size="10.5" class="good">見ないと適用できない</text>
+
+        <rect x="464" y="168" width="130" height="52" rx="5" class="s-good-bg"/><rect x="464" y="168" width="130" height="52" rx="5" class="s-good-s" stroke-width="1.5"/>
+        <text x="474" y="188" font-size="11.5" font-weight="700" class="good">追加だけして適用</text>
+        <text x="474" y="205" font-size="10.5" class="good">既存の設定は変えない</text>
+
+        <!-- 適用結果 -->
+        <rect x="0" y="244" width="594" height="60" rx="6" class="s-sunk"/><rect x="0" y="244" width="594" height="60" rx="6" class="s-line"/>
+        <text x="12" y="263" font-size="10.5" class="dim">入るもの（美容室を選んだ場合の例）</text>
+        <text x="12" y="282" font-size="11">タグ 6 個　／　友だち情報 3 個　／　リッチメニュー 1 個　／　ステップ配信 1 本（3 通・停止状態）　／　リマインド 1 件</text>
+        <text x="12" y="297" font-size="10.5" class="warn">直すべき箇所が 12 か所あります（店名・住所・電話番号・料金）</text>
+
+        <rect x="606" y="244" width="74" height="60" rx="6" class="s-warn-bg"/><rect x="606" y="244" width="74" height="60" rx="6" class="s-warn-s"/>
+        <text x="643" y="268" font-size="10.5" font-weight="700" class="warn" text-anchor="middle">まとめて</text>
+        <text x="643" y="284" font-size="10.5" font-weight="700" class="warn" text-anchor="middle">取り消す</text>
+
+        <text x="0" y="326" font-size="11" class="dim">ステップ配信は停止状態で作られ、内容を確認してから自分で開始する。適用しただけでは何も配信されない。</text>
+        <text x="0" y="344" font-size="11" class="dim">合わなければ、このひな形で作られたものだけを 1 操作で全部消せる。だから気軽に試せる。</text>
+      </svg>
+    </div>
+    <figcaption>
+      図 3-1: 初期設定の流れの比較。「LINE 接続」のウィザードは既存のもので、変更しません。
+      新しく足すのは、その後の 3 ステップです。
+    </figcaption>
+  </figure>
+
+  <h2 id="existing">5. 既存機能との重複確認</h2>
+
+  <div class="table-scroll">
+  <table>
+    <caption>
+      ◯ = すでにある ／ △ = 近いものがあるが目的が違う ／ ✕ = 公式マニュアルに記述を見つけられなかった。
+      詳しくは <a href="/scope">前提と調査範囲</a>。
+    </caption>
+    <thead><tr><th>本提案の要素</th><th>既存</th><th>確認した内容</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>メッセージのテンプレート</td>
+        <td><span class="badge mid">△ 目的が違う</span></td>
+        <td>「事前に作成したメッセージを使いまわせる機能」。<strong>自作の再利用であり、既製のひな形ではない。</strong>マニュアルに文例 7 種が文章で掲載されているが、押せば入るデータではない。</td>
+      </tr>
+      <tr>
+        <td>リッチメニューのテンプレート</td>
+        <td><span class="badge mid">△ レイアウトのみ</span></td>
+        <td>「レイアウトは 12 種類のテンプレートから選択可能」＋アイコン検索・背景設定。<strong>画面の分割パターンとパーツであり、業種別の構成ではない。</strong></td>
+      </tr>
+      <tr>
+        <td>フォームのプリセット</td>
+        <td><span class="badge mid">△ 共通項目のみ</span></td>
+        <td>「よく使われる項目」（名前・メール・住所・生年月日・電話・性別）を最大 5 つまで同時選択。業種に依らない共通項目。</td>
+      </tr>
+      <tr>
+        <td>業種別の導入事例</td>
+        <td><span class="badge lo">◯ 豊富にある</span></td>
+        <td>美容・ウェルネス、パーソナルトレーニング、学習塾、体操教室、結婚相談所、自動車販売、大学、介護スクールなど 11 件以上が公開されている。<strong>ひな形の中身を作る材料は、すでに社内にあると考えられます。</strong></td>
+      </tr>
+      <tr>
+        <td>設定を別アカウントへ複製する仕組み</td>
+        <td><span class="badge lo">◯ ある（データコピー）</span></td>
+        <td>「エルメ内で作成したデータを別のアカウントにコピーが出来る機能」。スタンダード／プロ限定。<strong>「コピー先に既存データがある場合は消えず追加される」という挙動が、本提案の「上書きしない」要件と一致します。</strong>後述のとおり、これが実現可能性の鍵です。</td>
+      </tr>
+      <tr>
+        <td>初期設定のウィザード</td>
+        <td><span class="badge mid">△ 接続部分のみ</span></td>
+        <td>新規接続時に「1 ステップずつ順番に設定」「クイック接続」を選べる。<strong>対象は LINE 公式アカウントとの接続で、タグ設計やシナリオは含まない。</strong></td>
+      </tr>
+      <tr>
+        <td><strong>業種別のテンプレート配布</strong></td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>公式マニュアル・公式サイトのいずれにも記述が見つかりませんでした。</td>
+      </tr>
+      <tr>
+        <td>ステップ配信のひな形</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>ステップ配信のマニュアル・FAQ を確認しましたが、既製シナリオの記述はありません。メッセージ単位で「テンプレート」機能を引用する形のみです。</td>
+      </tr>
+      <tr>
+        <td>適用したものをまとめて取り消す</td>
+        <td><span class="badge hi">✕ 見つからず</span></td>
+        <td>個別の削除・復元はあります（リッチメニューには「削除済み一覧」からの復元がある）が、<strong>一括で適用し一括で取り消す単位の記述はありません。</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="feasibility">6. 実現可能性と工数</h2>
+
+  <h3>技術的に可能か — 既存の「データコピー」が使えるかどうかが鍵</h3>
+  <div class="note">
+    <p>
+      L Message にはすでに <strong>「データコピー」</strong>という機能があります。
+      公式マニュアルによると「エルメ内で作成したデータを別のアカウントにコピーが出来る機能」で、
+      <strong>「コピー先に既存データがある場合は消えず追加される」</strong>と明記されています。
+    </p>
+    <p style="margin-bottom:0">
+      これは本提案が必要としている挙動そのものです。もし<strong>業種ごとの「見本アカウント」を社内に用意し、
+      そこからのデータコピーとして配れる</strong>なら、適用の仕組みはほぼ既存機能の転用になり、
+      <strong>工数は下の見積もりから 3〜5 人日ほど下がる見込みです。</strong>
+      ここが最初に確認したい点です。
+    </p>
+  </div>
+  <ul>
+    <li><strong>適用そのものは可能と考えます。</strong>作られるのは、利用者が手で作れる設定と同じものだけです。新しい種類の設定は増やしません。</li>
+    <li><strong>「まとめて取り消す」には、適用で作られたものに印を付ける必要があります。</strong>
+      既存のデータコピーにこの印がない場合は、ここだけ追加の対応が要ります。</li>
+    <li>外部サービスの追加、追加の月額費用は発生しません。</li>
+    <li>フリープランでも使えるようにしたいですが、既存のデータコピーは<strong>スタンダード／プロ限定で、フリープランへのコピーは不可</strong>と明記されています。
+      初期設定を助ける機能である以上、<strong>フリープランで使えなければ意味がありません。</strong>ここは仕組みの選び方に影響します。</li>
+  </ul>
+
+  <h3>リソース面で可能か — ここが本当の論点</h3>
+  <p>
+    <strong>開発は難しくありません。難しいのは、中身を作り続けることです。</strong>
+  </p>
+  <ul>
+    <li><strong>中身を書く人が必要です。</strong>美容室のひな形を作るには、美容室の商売を知っている必要があります。
+      幸い、公式には業種別の導入事例が 11 件以上あり、制作・運用代行の事業もあります。<strong>材料と知見は社内にあると考えられます。</strong></li>
+    <li><strong>文面の法令確認が必要です。</strong>美容・整体・医療系は薬機法、料金や「No.1」表記は景品表示法に触れやすい領域です。
+      <strong>会社が配ったひな形の文面でトラブルになると、会社の責任になります。</strong>この確認は開発工数の外にあります。</li>
+    <li><strong>更新が続きます。</strong>LINE の仕様変更、法令改正、L Message 自身の機能追加のたびに、全業種分を見直すことになります。
+      「うちは整骨院ではなく鍼灸院だ」という要望も必ず来ます。</li>
+  </ul>
+
+  <h3>工数の見積もり</h3>
+
+  <div class="effort">
+    <span class="big">11〜19</span><span class="unit">人日（仕組み＋5 業種分の中身）</span>
+    <span style="color:var(--line)">｜</span>
+    <span class="unit">＋ 継続的な更新の体制</span>
+  </div>
+
+  <div class="table-scroll">
+  <table>
+    <caption>1 人日の定義と前提は <a href="/scope">前提と調査範囲</a> に記載しています。</caption>
+    <thead><tr><th>内容</th><th class="num">人日</th><th>根拠</th></tr></thead>
+    <tbody>
+      <tr><td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">仕組み（1 回だけ作ればよい部分）</td></tr>
+      <tr><td>業種の選択と適用の画面</td><td class="num">2.0〜3.0</td><td>選択肢を並べ、適用を実行するだけ。既存のデータコピーを使えるなら 1.0 前後</td></tr>
+      <tr><td>適用前のプレビュー（何が作られるかの一覧と中身の確認）</td><td class="num">1.0〜1.5</td><td>作られるものの一覧表示。<strong>確認せずに適用できない</strong>導線を含む</td></tr>
+      <tr><td>既存と衝突しない追加のみの適用（管理名の重複回避を含む）</td><td class="num">1.5〜2.5</td><td>2026 年 9 月から管理名の重複登録が不可のため、名前の付け替え規則が必須。既存のデータコピーがこれを済ませているなら 0.5 前後</td></tr>
+      <tr><td>適用したものに印を付け、まとめて取り消せるようにする</td><td class="num">1.5〜2.0</td><td>印を持たせる対応が必要。<strong>「元に戻せる」ことがこの機能を試してもらう条件</strong>なので削れない</td></tr>
+      <tr><td>テストと調整</td><td class="num">1.0〜1.5</td><td>空のアカウントと運用中のアカウントの両方で、既存設定が壊れないことを確認</td></tr>
+      <tr><td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">中身（業種が増えるたびに発生する部分）</td></tr>
+      <tr><td>1 業種あたりの設計・作成・文面・レビュー</td><td class="num">1.0〜2.0</td><td>タグ・友だち情報・リッチメニュー・ステップ配信・リマインドの構成を決め、文面を書き、業種を知っている人に見てもらう。<strong>法令確認の時間は含みません</strong></td></tr>
+      <tr><td>×5 業種</td><td class="num">5.0〜10.0</td><td>最初の 5 業種は、導入事例が豊富な業種（美容・ウェルネス／パーソナルトレーニング／学習塾・スクール／整体・接骨院／予約型サービス）から選ぶのが現実的</td></tr>
+      <tr><td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">見積もりに含めていないもの</td></tr>
+      <tr><td>文面の法令確認（薬機法・景品表示法）</td><td class="num">—</td><td>専門の確認が必要で、エンジニアの工数では測れません</td></tr>
+      <tr><td>リッチメニュー画像のデザイン</td><td class="num">—</td><td>デザイナーの工数。業種数に比例します</td></tr>
+      <tr><td>公開後の継続的な更新</td><td class="num">—</td><td>LINE の仕様変更・法令改正のたびに全業種分の見直しが発生します</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="questions">7. 実装する場合の確認事項</h2>
+
+  <div class="note warn">
+    <p style="margin:0">
+      <strong>最初に確認すべきは、技術ではなく事業の話だと考えています。</strong>
+      御社は「LINE 公式アカウントの制作・運用代行」と「エルメ認定講座（導入支援コース・代理店コース）」を
+      公式の事業としてお持ちです。<strong>業種別のひな形を製品に無料で載せることは、この事業と競合する可能性があります。</strong><br>
+      私はここを判断できる立場にありません。<strong>だからこの提案を 3 番目に置き、「開発より先に体制の確認が必要」としています。</strong>
+      もし代理店向けに配る形（代理店が自社のひな形を顧客に配れるようにする）の方が筋が良いのであれば、
+      提案の形は変わります。
+    </p>
+  </div>
+
+  <h4>事業方針として伺いたいこと</h4>
+  <ul class="check">
+    <li>業種別のひな形を<strong>製品に無料で載せる</strong>ことと、<strong>制作代行・認定講座の事業</strong>は両立しますか。それとも競合しますか。</li>
+    <li>ひな形の中身は、誰が作り、誰が更新し続けますか。更新が止まったひな形は、無いより悪いものになります。</li>
+    <li>配ったひな形の文面が原因で利用者がトラブルになった場合、責任の所在をどう整理しますか。「参考であり、ご自身で確認してください」という注記でどこまで足りるか、法務の判断を伺いたいです。</li>
+  </ul>
+
+  <h4>仕様を決める前に伺いたいこと</h4>
+  <ul class="check">
+    <li>既存の「データコピー」の仕組みを、ひな形の配布に転用できますか。できるなら工数が大きく下がります。</li>
+    <li>データコピーは現在スタンダード／プロ限定でフリープランへは不可ですが、<strong>ひな形はフリープランでも使える必要があります</strong>。この制約は外せますか。</li>
+    <li>新規登録の業種の内訳は分かりますか。上位 5 業種が分かれば、作る順番をそれに合わせます。</li>
+    <li>登録後に配信ゼロのまま離脱している割合はどのくらいですか。<strong>この数字が小さいなら、この提案は作るべきではありません。</strong></li>
+  </ul>
+
+  <h4>作る前に試したいこと</h4>
+  <ul class="check">
+    <li>まず 1 業種だけ、<strong>手で作った見本アカウント</strong>を用意して、新規のお客様に設定を手で入れてあげる、ということを数件やってみたいです。
+      それで定着率が変わらないなら、機能として作る必要はありません。<strong>作らずに確かめられることは、作る前に確かめたいです。</strong></li>
+    <li>適用後に実際に使われ続けたか（30 日後も配信しているか）を測れるようにしてから出したいです。</li>
+  </ul>
+
+  <div class="pager">
+    <a href="/proposal-2">← 提案 2 設定のつながりの見える化</a>
+    <a href="/scope">前提と調査範囲 →</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>株式会社ミショナ ITエンジニア職 適性テスト提出物 ／ 2026年10月26日</p>
+    <p>本サイトは選考のための限定公開です。検索エンジンには登録されません（<code>noindex</code> 指定済み）。</p>
+    <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
+  </div>
+</footer>
+
+</body>
+</html>

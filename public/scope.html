@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="description" content="前提と調査範囲・工数の数え方・用語の説明・依頼者の立場での補足">
+<title>前提と調査範囲｜L Message 改善提案</title>
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">L Message 改善提案 <span>／ 適性テスト提出物</span></a>
+    <nav class="site">
+      <a href="/">概要</a>
+      <a href="/proposal-1">提案1 配信前確認</a>
+      <a href="/proposal-2">提案2 つながり</a>
+      <a href="/proposal-3">提案3 ひな形</a>
+      <a href="/scope" aria-current="page">前提と調査範囲</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap prose">
+
+  <span class="kicker">前提と調査範囲</span>
+  <h1>この提案を、どこまで確かめて書いたか</h1>
+  <p class="lede">
+    提案そのものより先に、<strong>どこまでが確認した事実で、どこからが私の判断か</strong>をはっきりさせておきます。
+    ここが曖昧な提案書は、受け取った側が検証に時間を使うことになり、かえって手間を増やすと考えているためです。
+  </p>
+
+  <div class="toc">
+    <div class="h">このページの内容</div>
+    <ol>
+      <li><a href="#how">調べ方と、情報源</a></li>
+      <li><a href="#limit">確認できていないこと（重要）</a></li>
+      <li><a href="#effort">工数の数え方</a></li>
+      <li><a href="#extra">ご依頼者の立場で、入れておいた方がよいと判断したこと</a></li>
+      <li><a href="#found">調べる途中で気づいた点</a></li>
+      <li><a href="#glossary">用語の説明</a></li>
+      <li><a href="#site">このサイト自体の作り</a></li>
+      <li><a href="#sources">参照した資料</a></li>
+    </ol>
+  </div>
+
+  <h2 id="how">1. 調べ方と、情報源</h2>
+
+  <p>提案を書く前に、次の順で確認しました。</p>
+  <ol>
+    <li><strong>L Message の公式マニュアル（lme.jp/manual）を機能ごとに読む。</strong>
+      配信・タグ・ステップ配信・リッチメニュー・フォーム・QR コードアクション・予約・テンプレート・料金・アップデート情報など。</li>
+    <li><strong>「その機能はもうあるのでは」を、提案ごとに個別に確認する。</strong>
+      マニュアル内検索（<code>lme.jp/manual/?s=…</code>）で「使用中」「どこで使」「削除すると」「影響」などを検索し、
+      <strong>ヒットしなかったことも結果として記録しました</strong>。</li>
+    <li><strong>LINE 公式アカウント側の仕様を、LINE Developers の公式ドキュメントで裏取りする。</strong>
+      L Message は LINE の Messaging API の上に作られているため、
+      通数の数え方のように<strong>L Message 側では決められない制約</strong>があります。そこは LINE 側の記述を根拠にしました。</li>
+    <li><strong>第三者のブログ・まとめ記事は、根拠に使っていません。</strong>
+      情報が古かったり、L Message と LINE 公式アカウント本体の機能が混ざっていたりするためです。</li>
+  </ol>
+
+  <div class="note">
+    <p style="margin:0">
+      提案の中で「✕ 見つからず」と書いた項目は、<strong>「公式マニュアル・公式 FAQ・マニュアル内検索のいずれにも記述が見つからなかった」</strong>という意味です。
+      <strong>「機能として存在しない」と断定したものではありません。</strong>
+      マニュアルに書かれていない機能が画面にある可能性は十分にあります。
+      社内の方が見て「それはもうある」という箇所があれば、その提案は取り下げます。
+    </p>
+  </div>
+
+  <h2 id="limit">2. 確認できていないこと（重要）</h2>
+
+  <div class="note warn">
+    <p><strong>私は L Message の管理画面を実際に操作していません。</strong></p>
+    <p style="margin-bottom:0">
+      この提案は、公開されている公式マニュアルの記述から画面構成を読み取って書いたものです。
+      したがって、次のことは確認できていません。
+    </p>
+  </div>
+
+  <ul>
+    <li><strong>既存の「配信内容を確認して送信に進む」画面に、実際に何が表示されているか。</strong>
+      提案 1 の工数は、ここが分かるだけで変わります。</li>
+    <li><strong>タグを削除するときに、画面上で何か警告が出るか。</strong>
+      マニュアルには記述がありませんでしたが、画面には出ているかもしれません。</li>
+    <li><strong>各一覧画面に実際に並んでいる列。</strong>
+      公式マニュアルが列構成を明記しているのはリッチメニュー・QR コードアクション・フォーム・タグの 4 つだけで、
+      ステップ配信一覧・自動応答一覧・テンプレート一覧などは記載がありません。</li>
+    <li><strong>画面の動作の速さ。</strong>友だち数やタグ数が多いアカウントでの表示速度は、実際に触らないと分かりません。</li>
+    <li><strong>内部の作り。</strong>工数見積もりの幅は、ここが見えないことから来ています。</li>
+  </ul>
+
+  <p>
+    <strong>この前提を踏まえて、各提案の工数は「幅」で出しています。</strong>
+    1 つの数字で出す方が読みやすいのは承知していますが、
+    見ていないものを 1 つの数字で出すと、根拠のない数字になります。
+    実際に触れる状態でもう一度見積もれば、幅はかなり詰められます。
+  </p>
+
+  <h2 id="effort">3. 工数の数え方</h2>
+
+  <div class="card">
+    <h3 style="margin-top:0">1 人日の定義</h3>
+    <p><strong>L Message の開発に慣れたエンジニア 1 名が、実働 1 日（7 時間）で進められる量</strong>を 1 人日としています。</p>
+    <div class="ba">
+      <div class="after">
+        <p class="h">含むもの</p>
+        <ul style="margin-bottom:0">
+          <li>要件の整理（何を作るかを決める話し合いを含む）</li>
+          <li>実装</li>
+          <li>簡易テスト（自分で動かして確認する範囲）</li>
+          <li>レビューでの指摘対応</li>
+        </ul>
+      </div>
+      <div class="before">
+        <p class="h">含まないもの</p>
+        <ul style="margin-bottom:0">
+          <li>デザイン制作（画面デザイン・画像素材）</li>
+          <li>本格的な QA・受け入れテスト</li>
+          <li>リリース作業と、その後の監視</li>
+          <li>マニュアル・ヘルプの更新</li>
+          <li>法務・薬機法などの確認</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-bottom:0;font-size:14px;color:var(--ink-soft)">
+      実際に必要な期間は、この人日に<strong>おおよそ 1.5〜2 倍</strong>を見ていただくのが安全だと考えています
+      （レビュー待ち・他の作業との並行・仕様の確認待ちが入るため）。
+    </p>
+  </div>
+
+  <h3>幅の付け方</h3>
+  <p>各項目の人日を「下限〜上限」で出しています。考え方は次のとおりです。</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>幅</th><th>意味</th><th>例</th></tr></thead>
+    <tbody>
+      <tr><td>幅が小さい（例 1.0）</td><td>やることが決まっていて、既存の作りに左右されにくい</td><td>一覧に列を 1 つ足す</td></tr>
+      <tr><td>幅が 1.5 倍程度</td><td>作る量は読めるが、細かい調整が読みきれない</td><td>自動チェック 9 項目（2.0〜2.5 人日）</td></tr>
+      <tr><td>幅が 1.5 倍を超える</td><td><strong>既存の作りを見ないと判断できない部分がある</strong></td><td>参照関係を集める仕組み（4.0〜6.0 人日）</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    幅が大きい項目は、<strong>見積もりの精度が低いことを隠さずに示している</strong>箇所です。
+    提案 2 の「参照関係を集める仕組み」がこれにあたります。
+    実務では、ここに<strong>先に 1 日だけ調査の時間をもらう</strong>（調査のための工数を見積もりに入れる）のが現実的だと考えています。
+  </p>
+
+  <h2 id="extra">4. ご依頼者の立場で、入れておいた方がよいと判断したこと</h2>
+
+  <p>
+    提案の良し悪しとは別に、<strong>実際に作ると決めたあとで必ず問題になること</strong>を、先に書いておきます。
+    提案書に書いていないと、あとから「聞いていない」になる種類の項目です。
+  </p>
+
+  <h3>4-1. 「良くなったか」を何で測るか</h3>
+  <p>
+    3 件とも、<strong>導入前に測り方を決めておかないと、効果が分からないまま終わります</strong>。
+    各提案の確認事項にも書きましたが、まとめるとこうなります。
+  </p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>提案</th><th>測りたいこと</th><th>測れないときの代わり</th></tr></thead>
+    <tbody>
+      <tr><td>提案 1</td><td>送信取り消しの実行回数、誤配信に関する問い合わせ件数</td><td>確認画面で「戻る」を押した回数（＝事故を未然に止めた回数の近似）</td></tr>
+      <tr><td>提案 2</td><td>タグ・設定の削除件数、アカウントあたりの設定数の推移</td><td>「使用箇所」表示を開いた回数</td></tr>
+      <tr><td>提案 3</td><td>登録から 30 日後も配信しているアカウントの割合</td><td>ひな形を適用したアカウントの、7 日以内の初回配信率</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>4-2. 出す順番と、引き返せるようにしておくこと</h3>
+  <ul>
+    <li><strong>3 件とも「表示を足す」方向で、既存の設定を書き換えません。</strong>
+      これは意図的です。設定を書き換える機能は、問題が起きたときに元に戻せません。</li>
+    <li>提案 1 の第 2 段「予約配信のずれを検知して保留する」だけが、唯一<strong>配信そのものに手を入れる</strong>箇所です。
+      ここは既定でオフにし、希望するアカウントだけが有効にできる形を提案しています。</li>
+    <li>いずれも<strong>一部のアカウントに先に出して様子を見る</strong>ことができる内容です。全アカウントに一斉に出す必要はありません。</li>
+  </ul>
+
+  <h3>4-3. 開発以外にかかるコスト</h3>
+  <p>工数見積もりに含めていない、しかし確実に発生するものです。</p>
+  <ul>
+    <li><strong>マニュアルの更新。</strong>L Message の公式マニュアルは機能ごとに丁寧に書かれています。
+      画面が変われば、該当ページの文章と画像を差し替える必要があります。提案 1 なら配信関連の数ページが対象です。</li>
+    <li><strong>サポート窓口への説明。</strong>「配信前に新しい画面が出るようになった」ことを知らないと、問い合わせに答えられません。</li>
+    <li><strong>代理店・認定講座の教材。</strong>御社は認定講座（導入支援コース・代理店コース）をお持ちなので、
+      画面が変われば教材も影響を受けます。</li>
+    <li><strong>提案 3 のみ、公開後もずっと続くコスト</strong>があります（業種別の中身の更新）。これが提案 3 を 3 番目にした理由の 1 つです。</li>
+  </ul>
+
+  <h3>4-4. やらない方がよい、と判断する基準</h3>
+  <p>
+    提案した側が言うことではないかもしれませんが、<strong>作らない方がよい条件</strong>も書いておきます。
+  </p>
+  <ul>
+    <li><strong>提案 1</strong>: 誤配信に関する問い合わせがほとんど届いていないなら、優先度を下げるべきです。
+      ただしこの場合も、「問い合わせが来ていない」のか「諦められている」のかは区別が必要だと考えます。</li>
+    <li><strong>提案 2</strong>: タグが 100 個を超えるアカウントが全体のごく一部なら、作る価値は小さくなります。</li>
+    <li><strong>提案 3</strong>: 登録後に配信ゼロで離脱する割合が小さいなら、作るべきではありません。
+      また、制作代行・認定講座の事業と競合しうる場合は、技術の話より先に事業の判断が必要です。</li>
+  </ul>
+
+  <h2 id="found">5. 調べる途中で気づいた点</h2>
+
+  <p>提案には入れていませんが、お伝えしておいた方がよいと判断したものです。</p>
+
+  <div class="card">
+    <h3 style="margin-top:0">公式マニュアル内に、数字が食い違っている箇所があります</h3>
+    <p><strong>1. 吹き出しと通数の関係</strong></p>
+    <ul>
+      <li>「配信数カウントの仕組み」のページ: <strong>5 吹き出し</strong>で LINE 公式アカウント配信数が 1 カウント</li>
+      <li>「目的から探す・よくあるご質問」のページ: LINE 公式アカウントは<strong>3 つの吹き出し</strong>で 1 通とカウント</li>
+    </ul>
+    <p>
+      LINE Developers の公式ドキュメントを確認したところ、Messaging API の仕様はこうでした。
+    </p>
+    <blockquote class="note plain">
+      <p style="margin:0">
+        1 回のリクエストに含められるメッセージオブジェクトは<strong>最大 5 つ</strong>。
+        送信したとカウントされる通数は<strong>送信した人数</strong>であり、
+        <strong>1 回のリクエストに含めたメッセージオブジェクトの数は、通数に影響しない</strong>。
+      </p>
+    </blockquote>
+    <p style="margin-bottom:0">
+      つまり <strong>「5 吹き出しまでが 1 通、宛先の人数分だけ通数が増える」</strong>のが LINE 側の仕様です。
+      マニュアルの「3 つの吹き出しで 1 通」という記述は、現在の仕様と合っていない可能性があります。
+      通数は料金に直結するため、<strong>ここは直す価値があると思います。</strong>
+    </p>
+  </div>
+
+  <div class="card">
+    <p style="margin:0"><strong>2. 配信数のリセット日</strong></p>
+    <ul style="margin-bottom:0">
+      <li>「配信数カウントの仕組み」のページ: リセット日はエルメ・LINE 公式アカウント共に<strong>毎月 1 日</strong></li>
+      <li>「目的から探す・よくあるご質問」のページ: 無料プランは<strong>接続した日</strong>を基準に 1 か月ごと、有料プランは<strong>契約日</strong>を基準に 1 か月ごと</li>
+    </ul>
+  </div>
+
+  <p style="margin-top:1.2em">
+    どちらも利用者の料金に関わる記述です。どちらが正しいかは社内でないと判断できないため、提案には含めず、ここに記載しました。
+  </p>
+
+  <h2 id="glossary">6. 用語の説明</h2>
+
+  <p>この提案で使っている、説明なしでは伝わりにくい言葉です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>言葉</th><th>意味</th></tr></thead>
+    <tbody>
+      <tr><td><strong>人日（にんにち）</strong></td><td>エンジニア 1 人が 1 日働いて進む量。「5 人日」は、1 人なら 5 日、2 人なら約 2.5 日かかる量。ただし人を増やせば比例して早くなるとは限りません。</td></tr>
+      <tr><td><strong>Push メッセージ / Reply メッセージ</strong></td><td>LINE 側の区分。こちらから送るのが Push（料金のカウント対象）、友だちの操作に応じて自動で返すのが Reply（カウント対象外）。あいさつメッセージや自動応答は Reply、一斉配信やステップ配信は Push です。</td></tr>
+      <tr><td><strong>吹き出し</strong></td><td>LINE のトーク画面に出る、1 つの発言の枠。1 回の配信で複数の吹き出しをまとめて送れます。</td></tr>
+      <tr><td><strong>逆引き</strong></td><td>「A が B を使っている」という関係を、B の側から「誰が自分を使っているか」と調べること。提案 2 の中心です。</td></tr>
+      <tr><td><strong>fail closed（フェイルクローズド）</strong></td><td>設定が足りないときに「通す」のではなく「止める」側に倒す考え方。このサイトの Basic 認証もこの作りにしています（下記）。</td></tr>
+      <tr><td><strong>noindex</strong></td><td>検索エンジンに「この内容を検索結果に出さないでください」と伝える指定。</td></tr>
+      <tr><td><strong>Basic 認証</strong></td><td>ページを開くときにユーザー名とパスワードを求める、最も基本的な仕組み。</td></tr>
+      <tr><td><strong>段階導入</strong></td><td>全部を一度に作らず、効果の大きい部分から順に出すこと。途中でやめる判断ができるのが利点です。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="site">7. このサイト自体の作り</h2>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>項目</th><th>内容</th><th>選んだ理由</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>公開環境</td>
+        <td>Vercel</td>
+        <td>課題で指定された選択肢の 1 つであり、Basic 認証を全ページにかけるための仕組み（Routing Middleware）が標準で使えるため。</td>
+      </tr>
+      <tr>
+        <td>言語・構成</td>
+        <td>静的な HTML / CSS と、認証用の JavaScript 1 ファイル</td>
+        <td><strong>読む資料のサイトに、フレームワークは不要</strong>と判断しました。ビルドが要らず、外部フォント・外部 JS・外部 CSS を一切読み込まないため、表示が速く、将来も壊れにくくなります。</td>
+      </tr>
+      <tr>
+        <td>図</td>
+        <td>すべて手書きのインライン SVG</td>
+        <td>画像ファイルではないため拡大しても粗くならず、画面の明暗（ライト／ダークモード）にも追従します。読み上げ用の説明文も図ごとに付けています。</td>
+      </tr>
+      <tr>
+        <td>検索避け</td>
+        <td>各ページの <code>meta robots</code> と、全パスへの <code>X-Robots-Tag</code> ヘッダーの<strong>二重</strong>。加えて <code>robots.txt</code></td>
+        <td>課題の指定どおり。片方だけだと、HTML を読まない取得（画像・CSS など）に効かないため両方かけています。</td>
+      </tr>
+      <tr>
+        <td>Basic 認証</td>
+        <td>Vercel の Routing Middleware で<strong>全パス</strong>に適用</td>
+        <td>対象パスを絞る設定をあえて書いていないため、HTML だけでなく CSS や robots.txt も認証なしでは取得できません。</td>
+      </tr>
+      <tr>
+        <td>パスワードの置き場所</td>
+        <td>ソースコードに書かず、Vercel の環境変数から読む。<strong>未設定なら全リクエストを拒否</strong></td>
+        <td>ソースに書くと、リポジトリを見られた時点で意味がなくなります。また「設定を忘れたら誰でも見られる」ではなく「設定を忘れたら誰も見られない」側に倒しています。</td>
+      </tr>
+      <tr>
+        <td>外部素材</td>
+        <td>使用なし（OS のフォントのみ）</td>
+        <td>第三者素材のライセンス確認が不要になり、提出物として扱いやすくなるため。</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="sources">8. 参照した資料</h2>
+
+  <h3>L Message 公式</h3>
+  <ul style="font-size:14px">
+    <li>メッセージ（一斉）配信 操作マニュアル — <code>lme.jp/manual/message_delivery/</code></li>
+    <li>テスト送信 操作マニュアル — <code>lme.jp/manual/test_delivery/</code></li>
+    <li>ステップ配信 操作マニュアル — <code>lme.jp/manual/step_delivery/</code></li>
+    <li>配信数カウントの仕組み — <code>lme.jp/manual/delivery-count/</code></li>
+    <li>送信したメッセージの取り消し方法 — <code>lme.jp/manual/cancel_sent_message/</code></li>
+    <li>タグ付けしたユーザーへの一斉配信方法 — <code>lme.jp/manual/howto_send_tagged_users/</code></li>
+    <li>エルメアクションの設定方法 — <code>lme.jp/manual/lme_action/</code></li>
+    <li>エルメアクションと友だちアクションの設定方法 — <code>lme.jp/manual/lmeaction_friendaction/</code></li>
+    <li>タグ管理 — <code>lme.jp/manual/tag/</code>　／　友だちリストページ — <code>lme.jp/manual/friend_list/</code></li>
+    <li>友だち情報管理 — <code>lme.jp/manual/friend_info_management/</code></li>
+    <li>QR コードアクション — <code>lme.jp/manual/inflow_route/</code></li>
+    <li>リッチメニュー — <code>lme.jp/manual/rich_menu/</code>　／　リッチメニュー画像作成 — <code>lme.jp/manual/richmenu_image_creation/</code></li>
+    <li>テンプレート — <code>lme.jp/manual/templete/</code>　／　自動応答 — <code>lme.jp/manual/auto_message/</code></li>
+    <li>フォーム作成 — <code>lme.jp/manual/form/</code>　／　データコピー — <code>lme.jp/manual/data_copy/</code></li>
+    <li>イベント予約 — <code>lme.jp/manual/event/</code>　／　レッスン予約 — <code>lme.jp/manual/lesson/</code>　／　サロン・面談予約 — <code>lme.jp/manual/salon/</code></li>
+    <li>リマインド配信 — <code>lme.jp/manual/remind-delivery/</code>　／　新規接続 — <code>lme.jp/manual/register/</code></li>
+    <li>チュートリアル — <code>lme.jp/manual/tutorial/</code>　／　目的から探す・よくあるご質問 — <code>lme.jp/manual/purpose_faq/</code></li>
+    <li>アップデート情報（2026 年 8 月・2026 年 9 月） — <code>lme.jp/manual/2026_8update/</code>, <code>lme.jp/manual/2026_9update/</code></li>
+    <li>導入事例一覧 — <code>lme.jp/manual/category/introduction_example/</code></li>
+    <li>制作・運用代行 — <code>lme.jp/pro-agent/</code>　／　エルメ認定講座 — <code>lme.jp/pr/certified_course/</code></li>
+    <li>料金プラン — <code>lme.jp/</code>（ページ内 <code>#pricePlan</code>）, <code>lme.jp/manual/proplan/</code>, <code>lme.jp/manual/payment/</code></li>
+  </ul>
+
+  <h3>LINE 公式（LINE Developers）</h3>
+  <ul style="font-size:14px">
+    <li>Messaging API — メッセージを送る（1 リクエストあたりのメッセージオブジェクト数の上限、通数の数え方）
+      — <code>developers.line.biz/ja/docs/messaging-api/sending-messages/</code></li>
+    <li>Messaging API — 料金 — <code>developers.line.biz/ja/docs/messaging-api/pricing/</code></li>
+  </ul>
+
+  <div class="pager">
+    <a href="/proposal-3">← 提案 3 業種別のひな形</a>
+    <a href="/">概要に戻る →</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>株式会社ミショナ ITエンジニア職 適性テスト提出物 ／ 2026年10月26日</p>
+    <p>本サイトは選考のための限定公開です。検索エンジンには登録されません（<code>noindex</code> 指定済み）。</p>
+    <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
+  </div>
+</footer>
+
+</body>
+</html>
