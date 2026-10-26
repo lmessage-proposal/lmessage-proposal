@@ -19,6 +19,7 @@
       <a href="/proposal-1">提案1 配信前確認</a>
       <a href="/proposal-2">提案2 つながり</a>
       <a href="/proposal-3">提案3 ひな形</a>
+      <a href="/proposal-4">提案4 iPad対応</a>
       <a href="/scope" aria-current="page">前提と調査範囲</a>
     </nav>
   </div>
@@ -113,7 +114,21 @@
     </ul>
   </div>
 
-  <p>提案 2（タグまわり）は、タグ一覧と削除ダイアログをまだ実機で見られていないため、記述が外れている可能性が残っています。</p>
+  <div class="note">
+    <p><strong>提案 4 は、実機を触ったからこそ生まれたものです。</strong></p>
+    <p style="margin-bottom:0">
+      当初の提案は 3 件でした。検証用アカウントを自分の iPad と iPhone で開いたところ、
+      <strong>ボタンが重なって読めない、保存ボタンが画面の外に切れて押せない、見出しが 1 文字ずつ縦に割れる</strong>
+      という表示崩れが見つかりました。公開マニュアルを何時間読んでも出てこなかった種類の課題です。
+      4 件目として追加しました。
+    </p>
+  </div>
+
+  <p>提案 2（タグまわり）は、タグ一覧の画面までは確認しましたが、
+  <strong>タグを削除したときのダイアログに影響範囲が出るかどうかは、まだ確認できていません</strong>（検証用アカウントのタグが 0 件のため）。
+  なおタグ管理の画面には「削除したアイテム」という導線があり、
+  <strong>削除したタグを戻せる可能性</strong>があります。もしそうなら「消すのが怖い」問題は想定より軽く、提案 2 の優先度は下がります。
+  ここは確認が必要です。</p>
 
   <h3>まだ確認できていないこと</h3>
 
@@ -323,13 +338,18 @@
       </tr>
       <tr>
         <td>言語・構成</td>
-        <td>静的な HTML / CSS と、認証用の JavaScript 1 ファイル</td>
-        <td><strong>読む資料のサイトに、フレームワークは不要</strong>と判断しました。ビルドが要らず、外部フォント・外部 JS・外部 CSS を一切読み込まないため、表示が速く、将来も壊れにくくなります。</td>
+        <td>静的な HTML / CSS、認証用の JavaScript 1 ファイル、表示の動き用の短いインラインスクリプト</td>
+        <td><strong>読む資料のサイトに、フレームワークは不要</strong>と判断しました。ビルドが要らず、<strong>外部フォント・外部ライブラリ・外部 CSS を一切読み込まない</strong>ため、表示が速く、将来も壊れにくくなります。</td>
       </tr>
       <tr>
         <td>図</td>
         <td>すべて手書きのインライン SVG</td>
         <td>画像ファイルではないため拡大しても粗くならず、画面の明暗（ライト／ダークモード）にも追従します。読み上げ用の説明文も図ごとに付けています。</td>
+      </tr>
+      <tr>
+        <td>画面の動き</td>
+        <td>スクロールに応じた控えめなフェードインと、読み進み度のバー。<strong>OS の「視差効果を減らす」設定を尊重して完全に無効化</strong></td>
+        <td>提案書は読ませるものなので、動きは主張しない範囲に留めました。<code>prefers-reduced-motion</code> に対応しているため、動きが苦手な方には一切動きません。JavaScript が無効でも内容はすべて読めます（透明度を下げる処理は、スクリプトが動いたときだけ適用されます）。あわせて、目次リンクで見出しが固定ヘッダーの下に隠れる問題も直しました。</td>
       </tr>
       <tr>
         <td>検索避け</td>
@@ -390,7 +410,7 @@
   </ul>
 
   <div class="pager">
-    <a href="/proposal-3">← 提案 3 業種別のひな形</a>
+    <a href="/proposal-4">← 提案 4 iPad・スマホ対応</a>
     <a href="/">概要に戻る →</a>
   </div>
 
@@ -404,6 +424,46 @@
     <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
   </div>
 </footer>
+
+<script>
+/* 動きは控えめに。OS の「視差効果を減らす」設定を尊重し、
+   JavaScript が動かない環境でも内容はそのまま読める作りにしている。
+   外部ライブラリは使用しない。 */
+(function () {
+  var reduce = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  // 読み進み度のバー
+  var bar = document.createElement('div');
+  bar.id = 'progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+  var tick = function () {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', tick, { passive: true });
+  window.addEventListener('resize', tick);
+  tick();
+
+  // スクロールに応じたフェードイン
+  if (!('IntersectionObserver' in window)) return;
+  var els = [].slice.call(
+    document.querySelectorAll('.card, figure, .table-scroll, .note, a.pcard, .effort')
+  );
+  if (!els.length) return;
+  document.documentElement.classList.add('js-reveal');
+  els.forEach(function (el) { el.classList.add('reveal'); });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
 
 </body>
 </html>

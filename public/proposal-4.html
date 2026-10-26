@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="description" content="提案4: iPad・スマホでの表示崩れを直す">
+<title>提案4 iPad・スマホでの表示崩れを直す｜L Message 改善提案</title>
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">L Message 改善提案 <span>／ 適性テスト提出物</span></a>
+    <nav class="site">
+      <a href="/">概要</a>
+      <a href="/proposal-1">提案1 配信前確認</a>
+      <a href="/proposal-2">提案2 つながり</a>
+      <a href="/proposal-3">提案3 ひな形</a>
+      <a href="/proposal-4" aria-current="page">提案4 iPad対応</a>
+      <a href="/scope">前提と調査範囲</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap prose">
+
+  <span class="kicker">提案 4 ／ 実機で発見した表示崩れ</span>
+  <h1>iPad・スマホでの表示崩れを直す</h1>
+  <p class="lede">
+    検証用アカウントを <strong>iPad と iPhone で実際に触ったら、操作できない画面がありました。</strong>
+    ボタンが重なって読めない、保存ボタンが画面の外に切れて押せない、見出しが 1 文字ずつ縦に割れる——。
+    <strong>iPad しか持たない店舗オーナーは、いま配信やタグ管理を正常に使えません。</strong>
+    これは「使いにくい」ではなく「使えない」です。
+  </p>
+
+  <div class="note">
+    <p style="margin:0">
+      <strong>この提案は、最初から入っていたものではありません。</strong>
+      当初は公開マニュアルだけを読んで 3 件にまとめていました。
+      課題の確認のために検証用アカウントを作り、<strong>手元の iPad と iPhone で画面を開いたことで見つかった</strong>のがこの 4 件目です。
+      全体の優先順位は 4 番目ですが、<strong>「崩れを止める」部分だけは最優先でよい</strong>と考えています（理由は後述）。
+    </p>
+  </div>
+
+  <div class="toc">
+    <div class="h">このページの内容</div>
+    <ol>
+      <li><a href="#problem">具体的な課題点（実機で確認）</a></li>
+      <li><a href="#who">誰が困るのか</a></li>
+      <li><a href="#solution">改善の内容と方法</a></li>
+      <li><a href="#figure">図: 崩れの実際と、直し方</a></li>
+      <li><a href="#existing">既存機能との重複確認</a></li>
+      <li><a href="#feasibility">実現可能性と工数</a></li>
+      <li><a href="#questions">実装する場合の確認事項</a></li>
+    </ol>
+  </div>
+
+  <h2 id="problem">1. 具体的な課題点（実機で確認）</h2>
+
+  <p>
+    課題の資料にも <strong>「細かな設定項目も多く、間違いを極力防ぐために、パソコンでの操作を前提に設計されております」</strong>
+    と書かれています。<strong>PC 前提は、設計の意思として理解しています。</strong>
+    ただし、その前提が崩れたとき——iPad やスマホで開いたとき——に<strong>「ただ見づらい」で済まず「操作できない」状態になっている</strong>のが問題です。
+    以下はすべて、検証用アカウントを自分の端末で開いて確認したものです。
+  </p>
+
+  <h3>崩れ 1: 保存ボタンが画面の外に切れて、押せない（iPhone）</h3>
+  <p>
+    タグの「新規作成」をスマホで開くと、入力欄が右端で切れ、<strong>登録を確定するボタンが画面の外に出て、緑の帯だけがちらっと見える</strong>状態でした。
+    横スクロールしないとボタンにたどり着けません。<strong>「タグを 1 つ作る」という最も基本的な操作が、スマホでは完結しづらい</strong>ということです。
+  </p>
+
+  <h3>崩れ 2: ボタンが重なって読めない（iPad）</h3>
+  <p>
+    タグ管理の画面を iPad で開くと、<strong>「新規作成」「CSV一括追加」「一括フォルダ変更」のボタンが重なって</strong>表示され、
+    下のボタンの文字が上のボタンに隠れていました。<strong>サイドバーを畳んでも重なりは直りません</strong>でした
+    （畳むトグルは存在します）。つまり横幅が狭いこと自体に対してレイアウトが追従していません。
+  </p>
+
+  <h3>崩れ 3: 見出しが 1 文字ずつ縦に割れる（iPhone・iPad）</h3>
+  <p>
+    メッセージ配信の作成画面では、<strong>「管理用タイトル」が「管／理／用／タ／イ／ト／ル」と 1 文字ずつ縦に割れ、
+    「配信タイミング設定」も縦積み</strong>になって、何の項目か読み取るのに時間がかかりました。
+    固定幅のサイドバーが横幅を食い、本文が極端に細い列に押し込められた結果です。
+  </p>
+
+  <div class="note warn">
+    <p style="margin:0">
+      <strong>補足:</strong> これらは「スマホアプリを使えば解決では？」と思われるかもしれません。
+      しかし L Message のスマホアプリが対応しているのは <strong>1:1 チャットなど一部の機能</strong>で、
+      <strong>メッセージ配信・タグ管理・各種設定はブラウザ（PC 向けの画面）でしか行えません。</strong>
+      だからこそ、ブラウザ画面が端末の幅に追従しないことが、そのまま「できない」に直結します。
+    </p>
+  </div>
+
+  <h2 id="who">2. 誰が困るのか</h2>
+  <p>
+    全員ではありません。<strong>PC で運用している人は、いまのままで困りません。</strong>
+    困るのは次のような人たちです。
+  </p>
+  <ul>
+    <li><strong>iPad や スマホしか持っていない店舗オーナー。</strong>
+      提案 3 で扱った美容室・整体院・教室・小規模サロンなどは、レジ代わりの iPad はあっても
+      業務用 PC は持たない、という店が珍しくありません。この層にとっては
+      <strong>「配信やタグ管理がそもそも操作できない」</strong>という、入口の問題になります。</li>
+    <li><strong>出先で配信状況や予約だけ確認したい運用担当者。</strong>
+      スマホで開いて数字がまともに読めないと、結局 PC の前に戻るまで何もできません。</li>
+  </ul>
+  <p>
+    <strong>この提案の効果は、この層が顧客全体のどのくらいを占めるかに左右されます。</strong>
+    そこが分からないため、効果は「中〜大」と幅を持たせています（確認事項に挙げています）。
+    ただ、提案 3 で狙う業種とこの層は<strong>重なります</strong>。
+    「業種別ひな形で新規を取り込む」のに、その新規が iPad しか持っていなくて操作できない、では噛み合いません。
+  </p>
+
+  <h2 id="solution">3. 改善の内容と方法</h2>
+  <p>
+    <strong>いきなり全画面をスマホ最適化する、という話にはしません。</strong>量が多すぎて現実的でないためです。
+    2 段階に分けます。
+  </p>
+
+  <h3>フェーズ 0: 崩れを止める（最優先でよい）</h3>
+  <p>
+    「スマホで快適に」ではなく、<strong>「壊れて操作できない状態をなくす」</strong>だけに絞ります。具体的には、
+    利用頻度の高い画面から順に:
+  </p>
+  <ul>
+    <li><strong>主要な操作ボタンを、画面の外に出さない・重ねない。</strong>
+      狭い幅では横並びをやめて縦に積む。とくに<strong>「保存」「登録」などの確定ボタンは、狭い幅では画面下部に固定</strong>して、
+      横スクロールなしで必ず押せるようにする。</li>
+    <li><strong>見出し・ラベルを 1 文字ずつ折り返させない。</strong>
+      本文領域に最低限の幅を確保し、確保できない幅ではサイドバーを自動で畳む。</li>
+    <li><strong>モーダル（新規作成などの小窓）を、狭い幅では全幅表示にする。</strong>入力欄と確定ボタンが必ず収まるようにする。</li>
+  </ul>
+  <p>
+    <strong>これは新機能ではなく、表示の不具合修正です。</strong>画面の中身も操作の流れも変えません。
+  </p>
+
+  <h3>フェーズ 1: よく使う画面を、端末に合わせて読めるようにする</h3>
+  <p>
+    崩れを止めたうえで、オーナーが出先で触る頻度の高い画面から、本格的に端末幅へ追従させます。
+    対象は欲張らず、<strong>メッセージ配信・タグ管理・1:1 チャット・予約状況の閲覧</strong>あたりに絞ります。
+  </p>
+
+  <h3>やらないこと</h3>
+  <ul>
+    <li><strong>全画面を一度にやらない。</strong>使用頻度の高い順に区切って出します。</li>
+    <li><strong>PC 版の画面を作り替えない。</strong>PC で問題なく使えている人の見た目は変えません。狭い幅のときだけ表示を変えます。</li>
+    <li><strong>スマホアプリの機能追加とは切り離す。</strong>これはブラウザ画面の話です。</li>
+  </ul>
+
+  <h2 id="figure">4. 図</h2>
+
+  <figure>
+    <div class="fig-body">
+      <svg viewBox="0 0 680 280" width="680" height="280" role="img"
+           aria-label="実機で確認した3つの表示崩れ。iPhoneで保存ボタンが画面外に切れている様子、iPadでボタンが重なっている様子、見出しが1文字ずつ縦に割れている様子を並べた図。">
+        <title>実機で確認した 3 つの表示崩れ</title>
+
+        <!-- 崩れ1: スマホ モーダル 保存ボタン見切れ -->
+        <text x="8" y="16" font-size="11" font-weight="700" class="bad">崩れ 1（iPhone）保存ボタンが画面外</text>
+        <rect x="8" y="26" width="150" height="230" rx="10" class="s-sunk"/>
+        <rect x="8" y="26" width="150" height="230" rx="10" class="s-line"/>
+        <rect x="20" y="40" width="200" height="200" rx="6" class="s-bg"/>
+        <rect x="20" y="40" width="200" height="200" rx="6" class="s-bad-s" stroke-width="1"/>
+        <text x="30" y="60" font-size="10" font-weight="700">タグ新規作成</text>
+        <rect x="30" y="72" width="180" height="22" rx="4" class="s-sunk"/>
+        <text x="38" y="87" font-size="9" class="dim">タグ管理名を入力してくださ…</text>
+        <rect x="30" y="210" width="70" height="22" rx="4" class="s-bg"/>
+        <rect x="30" y="210" width="70" height="22" rx="4" class="s-line"/>
+        <text x="65" y="225" font-size="9" text-anchor="middle" class="dim">＋タグを追加</text>
+        <!-- 画面端で切れる保存ボタン -->
+        <rect x="150" y="210" width="16" height="22" rx="4" class="s-good-bg"/>
+        <rect x="150" y="210" width="16" height="22" class="s-good-s" stroke-width="1"/>
+        <line x1="158" y1="26" x2="158" y2="256" class="s-bad-s" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="100" y="252" font-size="9" class="bad">→ 「保存」はこの先（押せない）</text>
+
+        <!-- 崩れ2: iPad ボタン重なり -->
+        <text x="238" y="16" font-size="11" font-weight="700" class="bad">崩れ 2（iPad）ボタンが重なる</text>
+        <rect x="238" y="26" width="200" height="230" rx="8" class="s-sunk"/>
+        <rect x="238" y="26" width="200" height="230" rx="8" class="s-line"/>
+        <text x="250" y="52" font-size="11" font-weight="700">タグ管理</text>
+        <rect x="250" y="66" width="80" height="28" rx="5" class="s-bg"/>
+        <rect x="250" y="66" width="80" height="28" rx="5" class="s-line"/>
+        <text x="290" y="84" font-size="9" text-anchor="middle" class="soft">フォルダ追加</text>
+        <!-- 重なり -->
+        <rect x="346" y="78" width="76" height="26" rx="5" class="s-accent-bg"/>
+        <rect x="346" y="78" width="76" height="26" rx="5" class="s-accent-s" stroke-width="1"/>
+        <text x="384" y="95" font-size="9" text-anchor="middle" class="acc">新規作成</text>
+        <rect x="358" y="92" width="76" height="26" rx="5" class="s-good-bg"/>
+        <rect x="358" y="92" width="76" height="26" rx="5" class="s-good-s" stroke-width="1"/>
+        <text x="396" y="109" font-size="9" text-anchor="middle" class="good">CSV一括追加</text>
+        <rect x="350" y="108" width="84" height="24" rx="5" class="s-sunk"/>
+        <rect x="350" y="108" width="84" height="24" rx="5" class="s-line"/>
+        <text x="392" y="124" font-size="9" text-anchor="middle" class="dim">一括フォルダ変更</text>
+        <text x="250" y="150" font-size="9.5" class="bad">3 つのボタンが重なり、文字が隠れて読めない。</text>
+        <text x="250" y="166" font-size="9.5" class="bad">サイドバーを畳んでも直らない。</text>
+        <rect x="250" y="182" width="172" height="60" rx="5" class="s-bg"/>
+        <rect x="250" y="182" width="172" height="60" rx="5" class="s-line"/>
+        <text x="260" y="202" font-size="9" class="dim">※ 横幅が狭いこと自体に</text>
+        <text x="260" y="216" font-size="9" class="dim">　 レイアウトが追従していない</text>
+        <text x="260" y="233" font-size="9" class="dim">　（＝幅対応の欠落）</text>
+
+        <!-- 崩れ3: 1文字ずつ縦割れ -->
+        <text x="454" y="16" font-size="11" font-weight="700" class="bad">崩れ 3 見出しが縦に割れる</text>
+        <rect x="454" y="26" width="218" height="230" rx="8" class="s-sunk"/>
+        <rect x="454" y="26" width="218" height="230" rx="8" class="s-line"/>
+        <!-- 細い本文列 -->
+        <rect x="466" y="40" width="40" height="200" rx="4" class="s-bg"/>
+        <rect x="466" y="40" width="40" height="200" rx="4" class="s-bad-s" stroke-width="1"/>
+        <text x="486" y="58" font-size="10" text-anchor="middle" class="bad">管</text>
+        <text x="486" y="73" font-size="10" text-anchor="middle" class="bad">理</text>
+        <text x="486" y="88" font-size="10" text-anchor="middle" class="bad">用</text>
+        <text x="486" y="103" font-size="10" text-anchor="middle" class="bad">タ</text>
+        <text x="486" y="118" font-size="10" text-anchor="middle" class="bad">イ</text>
+        <text x="486" y="133" font-size="10" text-anchor="middle" class="bad">ト</text>
+        <text x="486" y="148" font-size="10" text-anchor="middle" class="bad">ル</text>
+        <text x="518" y="60" font-size="9.5" class="dim">「管理用タイトル」が</text>
+        <text x="518" y="75" font-size="9.5" class="dim">1 文字ずつ縦に割れる。</text>
+        <text x="518" y="98" font-size="9.5" class="dim">固定幅のサイドバーが</text>
+        <text x="518" y="113" font-size="9.5" class="dim">横幅を食い、本文が</text>
+        <text x="518" y="128" font-size="9.5" class="dim">極端に細い列に</text>
+        <text x="518" y="143" font-size="9.5" class="dim">押し込められている。</text>
+        <text x="466" y="200" font-size="9.5" class="soft">読み取るのに時間がかかり、</text>
+        <text x="466" y="216" font-size="9.5" class="soft">設定を間違えやすくなる。</text>
+      </svg>
+    </div>
+    <figcaption>
+      図 4-1: 検証用アカウントを自分の iPad・iPhone で開いて確認した 3 つの表示崩れ（配置はイメージで再現したもの）。
+      いずれも「見づらい」ではなく「操作が完了しない／読み取れない」レベルです。
+    </figcaption>
+  </figure>
+
+  <figure>
+    <div class="fig-body">
+      <svg viewBox="0 0 680 250" width="680" height="250" role="img"
+           aria-label="改善の考え方。狭い幅ではサイドバーを畳み、本文を1カラムに流し、ボタンを縦積みにして確定ボタンを画面下部に固定する流れの図。">
+        <title>フェーズ 0「崩れを止める」の考え方</title>
+        <defs>
+          <marker id="ar4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <!-- before -->
+        <text x="8" y="16" font-size="11" font-weight="700" class="bad">いま（狭い幅）</text>
+        <rect x="8" y="26" width="150" height="200" rx="8" class="s-bg"/>
+        <rect x="8" y="26" width="150" height="200" rx="8" class="s-line"/>
+        <rect x="8" y="26" width="54" height="200" rx="8" class="s-sunk"/>
+        <text x="35" y="130" font-size="9" text-anchor="middle" class="dim" transform="rotate(-90 35 130)">固定サイドバー</text>
+        <rect x="70" y="40" width="20" height="170" rx="3" class="s-bad-bg"/>
+        <rect x="70" y="40" width="20" height="170" rx="3" class="s-bad-s" stroke-width="1"/>
+        <text x="80" y="128" font-size="8" text-anchor="middle" class="bad" transform="rotate(-90 80 128)">細い本文・文字が縦割れ</text>
+        <rect x="98" y="190" width="40" height="18" rx="3" class="s-good-bg"/>
+        <line x1="150" y1="26" x2="150" y2="226" class="s-bad-s" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <text x="138" y="203" font-size="8" class="bad">保存→外</text>
+
+        <line x1="188" y1="126" x2="214" y2="126" class="s-stroke" stroke-width="1.5" marker-end="url(#ar4)" style="color:var(--ink-faint)"/>
+        <text x="201" y="116" font-size="9" text-anchor="middle" class="dim">狭い幅</text>
+        <text x="201" y="142" font-size="9" text-anchor="middle" class="dim">のときだけ</text>
+
+        <!-- after -->
+        <text x="238" y="16" font-size="11" font-weight="700" class="good">フェーズ 0 の後</text>
+        <rect x="238" y="26" width="150" height="200" rx="8" class="s-bg"/>
+        <rect x="238" y="26" width="150" height="200" rx="8" class="s-line"/>
+        <rect x="238" y="26" width="150" height="22" rx="8" class="s-sunk"/>
+        <text x="250" y="41" font-size="9" class="soft">☰ メニュー（畳む）</text>
+        <rect x="250" y="56" width="126" height="20" rx="3" class="s-sunk"/>
+        <text x="258" y="70" font-size="9" class="soft">管理用タイトル</text>
+        <rect x="250" y="82" width="126" height="26" rx="3" class="s-bg"/>
+        <rect x="250" y="82" width="126" height="26" rx="3" class="s-line"/>
+        <text x="258" y="99" font-size="8.5" class="dim">入力欄（全幅で収まる）</text>
+        <rect x="250" y="116" width="126" height="20" rx="3" class="s-sunk"/>
+        <text x="258" y="130" font-size="9" class="soft">配信タイミング設定</text>
+        <!-- 下部固定の保存 -->
+        <rect x="238" y="198" width="150" height="28" rx="8" class="s-good-bg"/>
+        <rect x="238" y="198" width="150" height="28" class="s-good-s" stroke-width="1.5"/>
+        <text x="313" y="216" font-size="10" text-anchor="middle" font-weight="700" class="good">保存（下部に固定）</text>
+
+        <!-- 説明 -->
+        <line x1="420" y1="26" x2="420" y2="226" class="s-line"/>
+        <text x="438" y="50" font-size="11" font-weight="700" class="soft">やることは 3 つだけ</text>
+        <text x="438" y="76" font-size="10.5" class="soft">1. 狭い幅ではサイドバーを畳む</text>
+        <text x="438" y="100" font-size="10.5" class="soft">2. 横並びをやめて 1 カラムに流す</text>
+        <text x="438" y="124" font-size="10.5" class="soft">　（文字の縦割れ・ボタンの重なりが消える）</text>
+        <text x="438" y="148" font-size="10.5" class="soft">3. 確定ボタンを画面下部に固定する</text>
+        <text x="438" y="172" font-size="10.5" class="soft">　（「保存」が必ず押せる）</text>
+        <text x="438" y="202" font-size="10" class="dim">PC の広い幅では、いまの見た目のまま。</text>
+        <text x="438" y="218" font-size="10" class="dim">狭い幅のときだけ切り替わる。</text>
+      </svg>
+    </div>
+    <figcaption>
+      図 4-2: フェーズ 0 の考え方。画面の中身や操作の流れは変えず、<strong>狭い幅のときの並べ方だけ</strong>を直します。
+      PC で使っている人の見た目は変わりません。
+    </figcaption>
+  </figure>
+
+  <h2 id="existing">5. 既存機能との重複確認</h2>
+  <div class="table-scroll">
+  <table>
+    <caption>◯ = ある ／ △ = 部分的にある ／ ✕ = 確認できなかった。詳しくは <a href="/scope">前提と調査範囲</a>。</caption>
+    <thead><tr><th>本提案の要素</th><th>既存</th><th>確認した内容</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>サイドバーを畳むトグル</td>
+        <td><span class="badge mid">△ ある</span></td>
+        <td><strong>実機で確認。</strong>サイドバーを畳むボタン（「&lt;」「メニューを開く」）は存在する。<strong>ただし畳んでも本文側のレイアウト崩れ（ボタンの重なり・文字の縦割れ）は直りませんでした。</strong>横幅への追従は別の問題として残っています。</td>
+      </tr>
+      <tr>
+        <td>スマホアプリ</td>
+        <td><span class="badge mid">△ 一部機能のみ</span></td>
+        <td>iOS / Android アプリがあるが、課題資料どおり対応は<strong>1:1 チャットなど一部の機能</strong>。<strong>配信・タグ管理・設定はブラウザ（PC 向け画面）でしか行えず</strong>、そこが崩れると代替手段がない。</td>
+      </tr>
+      <tr>
+        <td><strong>画面幅への追従（レスポンシブ対応）</strong></td>
+        <td><span class="badge hi">✕ 未対応</span></td>
+        <td>課題資料に「パソコンでの操作を前提に設計」と明記。<strong>iPad・iPhone で実際に開き、ボタンの重なり・保存ボタンの見切れ・見出しの縦割れを確認しました。</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="feasibility">6. 実現可能性と工数</h2>
+
+  <h3>技術的に可能か</h3>
+  <ul>
+    <li><strong>可能です。これは表示層（見た目の並べ方）だけの変更で、データにも処理にも触れません。</strong>
+      そのため 3 件の中で<strong>最も安全で、最も戻しやすい</strong>部類です。問題が出たら元の表示に戻せます。</li>
+    <li><strong>土台は一部すでにあります。</strong>サイドバーを畳むトグルは実装済みで、チャットはスマホアプリが担っています。
+      ゼロからではありません。</li>
+    <li><strong>難しさは量です。</strong>管理画面の数が多いため、全画面を対象にすると大きくなります。だから対象を絞ります。</li>
+  </ul>
+
+  <h3>リソース面で可能か</h3>
+  <ul>
+    <li>新しい外部サービス・追加の月額費用は発生しません。</li>
+    <li>画面ごとに表示の確認が要るため、デザイナーの確認工数が別途かかります（下の人日には含みません）。</li>
+    <li>実機（iPad・各サイズのスマホ）での確認環境が必要です。</li>
+  </ul>
+
+  <h3>工数の見積もり</h3>
+  <div class="effort">
+    <span class="big">8〜15</span><span class="unit">人日（フェーズ0・崩れ止め）</span>
+    <span style="color:var(--line)">｜</span>
+    <span class="big">30〜60</span><span class="unit">人日（フェーズ1・概算）</span>
+  </div>
+
+  <div class="table-scroll">
+  <table>
+    <caption>
+      1 人日の定義と前提は <a href="/scope">前提と調査範囲</a> に記載。
+      <strong>この提案の工数は対象画面の数に比例します</strong>ので、幅はどこまでやるかの判断で動きます。
+    </caption>
+    <thead><tr><th>内容</th><th class="num">人日</th><th>根拠</th></tr></thead>
+    <tbody>
+      <tr><td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">フェーズ 0: 崩れを止める（最優先でよい）</td></tr>
+      <tr><td>共通の崩れ止め（狭い幅でサイドバー自動折りたたみ・本文の最低幅確保・確定ボタンの下部固定の仕組み）</td><td class="num">3.0〜5.0</td><td>1 回作れば多くの画面に効く共通部分。ここが土台</td></tr>
+      <tr><td>利用頻度の高い画面の個別対応（配信作成・タグ管理・主要モーダル）</td><td class="num">4.0〜8.0</td><td>画面ごとにボタンの並べ方とモーダルの収まりを直す。1 画面あたり 0.5〜1.0 人日</td></tr>
+      <tr><td>実機確認と調整</td><td class="num">1.0〜2.0</td><td>iPad・複数サイズのスマホで、保存ボタンに届くか・文字が割れないかを確認</td></tr>
+      <tr><td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">フェーズ 1: 主要画面の本格レスポンシブ（概算・幅が大きい）</td></tr>
+      <tr><td>オーナーが出先で触る画面（配信・タグ・1:1 チャット・予約状況の閲覧）を端末幅へ追従</td><td class="num">30〜60</td><td><strong>対象画面数に比例する概算です。</strong>どの画面を対象にするかを先に決めれば、幅は詰められます</td></tr>
+      <tr><td colspan="3" style="background:var(--card-sunk);font-weight:700;font-size:13px">含めていないもの</td></tr>
+      <tr><td>各画面のデザイン確認</td><td class="num">—</td><td>デザイナーの工数。対象画面数に比例</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <p style="margin:0">
+      <strong>なぜ「崩れ止め」だけは先行してよいのか。</strong>
+      重なったボタンや画面外に切れた保存ボタンは、<strong>その場で見える不具合</strong>です。
+      検討中の人が iPad で開いて最初に目にするのがこれだと、「作り込みが甘い」という印象に直結します。
+      修正は表示層だけで安全・低リスク・戻しやすく、工数も中規模です。
+      <strong>提案 2・3 の大きな開発を待たずに、信頼感を底上げできる</strong>のがフェーズ 0 です。
+    </p>
+  </div>
+
+  <h2 id="questions">7. 実装する場合の確認事項</h2>
+
+  <h4>優先度を決めるために伺いたいこと</h4>
+  <ul class="check">
+    <li>利用者が管理画面を開くときの端末の内訳（PC / iPad / スマホ）は分かりますか。
+      <strong>この割合が、この提案の効果をそのまま決めます。</strong>タブレット・スマホからのアクセスが一定以上あるなら、優先度は上がります。</li>
+    <li>サポートに「スマホ・iPad で操作できない／ボタンが押せない」という問い合わせは届いていますか。届いているなら、その画面から直すのが早いです。</li>
+    <li>提案 3（業種別ひな形）で狙う新規オーナー層は、どの端末で使い始めることが多いですか。iPad 中心なら、提案 3 と提案 4 はセットで考えるべきです。</li>
+  </ul>
+
+  <h4>対象を決めるために伺いたいこと</h4>
+  <ul class="check">
+    <li>フェーズ 0 で最初に直すべき画面はどれでしょうか。アクセスの多い順、あるいは問い合わせの多い順で選びたいです。</li>
+    <li>フェーズ 1 の対象は「配信・タグ・1:1 チャット・予約状況の閲覧」を想定していますが、現場の実感と合っていますか。削るべき／足すべき画面があれば教えてください。</li>
+    <li>スマホアプリの対応機能を今後広げる計画はありますか。ある場合、ブラウザ側のどこまでを直すかの線引きが変わります。</li>
+  </ul>
+
+  <h4>作る前に確かめたいこと</h4>
+  <ul class="check">
+    <li>対応する端末幅の下限をどこに置くか（例: iPhone の最小幅まで見るか、iPad までにするか）。下限を決めれば確認の手間も見積もれます。</li>
+    <li>PC 版の見た目を一切変えない、という前提でよいでしょうか。既存ユーザーの操作感を守るため、狭い幅のときだけ切り替える方針を推奨します。</li>
+  </ul>
+
+  <div class="pager">
+    <a href="/proposal-3">← 提案 3 業種別のひな形</a>
+    <a href="/scope">前提と調査範囲 →</a>
+  </div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>株式会社ミショナ ITエンジニア職 適性テスト提出物 ／ 2026年10月26日</p>
+    <p>本サイトは選考のための限定公開です。検索エンジンには登録されません（<code>noindex</code> 指定済み）。</p>
+    <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
+  </div>
+</footer>
+
+<script>
+/* 動きは控えめに。OS の「視差効果を減らす」設定を尊重し、
+   JavaScript が動かない環境でも内容はそのまま読める作りにしている。
+   外部ライブラリは使用しない。 */
+(function () {
+  var reduce = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  // 読み進み度のバー
+  var bar = document.createElement('div');
+  bar.id = 'progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+  var tick = function () {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', tick, { passive: true });
+  window.addEventListener('resize', tick);
+  tick();
+
+  // スクロールに応じたフェードイン
+  if (!('IntersectionObserver' in window)) return;
+  var els = [].slice.call(
+    document.querySelectorAll('.card, figure, .table-scroll, .note, a.pcard, .effort')
+  );
+  if (!els.length) return;
+  document.documentElement.classList.add('js-reveal');
+  els.forEach(function (el) { el.classList.add('reveal'); });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
+
+</body>
+</html>

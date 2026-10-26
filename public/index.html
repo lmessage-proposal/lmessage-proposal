@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="googlebot" content="noindex, nofollow">
-<meta name="description" content="L Message の改善提案 3件（株式会社ミショナ ITエンジニア職 適性テスト提出物）">
+<meta name="description" content="L Message の改善提案 4件（株式会社ミショナ ITエンジニア職 適性テスト提出物）">
 <title>L Message 改善提案｜株式会社ミショナ 適性テスト</title>
 <link rel="stylesheet" href="/assets/style.css">
 </head>
@@ -19,6 +19,7 @@
       <a href="/proposal-1">提案1 配信前確認</a>
       <a href="/proposal-2">提案2 つながり</a>
       <a href="/proposal-3">提案3 ひな形</a>
+      <a href="/proposal-4">提案4 iPad対応</a>
       <a href="/scope">前提と調査範囲</a>
     </nav>
   </div>
@@ -28,14 +29,16 @@
 <div class="wrap prose">
 
   <span class="kicker">株式会社ミショナ ／ IT エンジニア職 適性テスト</span>
-  <h1>L Message の改善提案 3 件</h1>
+  <h1>L Message の改善提案 4 件</h1>
   <p class="meta">提出日 2026年10月26日 ／ 作成者: <!-- ここに氏名を記入 -->（氏名）</p>
 
   <p class="lede">
     L Message を「はじめて使う店舗オーナー」と「毎日配信する運用担当者」の両方の立場から見たとき、
     つまずきやすいのは機能の数ではなく <strong>「この操作でよかったのか、送る前に確かめられない」</strong> という点だと考えました。
-    本提案はこの一点に向けた 3 件です。いずれも新しい概念を増やさず、
-    すでにある機能を <strong>確認できる形に組み直す</strong> ことを狙っています。
+    本提案は 4 件。<strong>最初の 3 件</strong>は新しい概念を増やさず、
+    すでにある機能を <strong>確認できる形に組み直す</strong> こと、
+    <strong>最後の 1 件</strong>は、その画面が <strong>手元の端末で読める</strong> ことを狙っています
+    （4 件目は、検証用アカウントを iPad・iPhone で触って見つけた表示崩れがきっかけです）。
   </p>
 
   <div class="note plain">
@@ -50,7 +53,7 @@
     </ul>
   </div>
 
-  <h2>3 件の概要</h2>
+  <h2>4 件の概要</h2>
 
   <div class="proposal-grid">
     <a class="pcard" href="/proposal-1">
@@ -98,6 +101,21 @@
         <span>効果: 大（新規のみ）</span><span>手間: 大＋継続</span><span>見積: 11〜19 人日＋運用</span>
       </div>
     </a>
+
+    <a class="pcard" href="/proposal-4">
+      <div class="pc-top">
+        <span class="pc-no">提案 4</span>
+        <span class="badge next">実機で発見</span>
+      </div>
+      <div class="pc-title">iPad・スマホでの表示崩れを直す</div>
+      <p class="pc-sum">
+        検証用アカウントを iPad と iPhone で触ったところ、ボタンが重なって読めない・保存ボタンが画面外に切れて押せない、
+        といった<strong>表示崩れ</strong>がありました。iPad しか持たない店舗オーナーは、いま配信やタグ管理を正常に操作できません。
+      </p>
+      <div class="pc-foot">
+        <span>効果: 中〜大</span><span>手間: 大（崩れ止めは中）</span><span>見積: フェーズ0 8〜15 人日</span>
+      </div>
+    </a>
   </div>
 
   <h2>優先順位</h2>
@@ -139,6 +157,13 @@
         <td><span class="badge mid">中</span><br>既存アカウントへ適用したときの衝突と、文面の法令確認という別種の検討が必要。</td>
         <td><strong>3 位</strong></td>
       </tr>
+      <tr>
+        <td><strong>提案 4</strong><br>iPad・スマホの表示崩れ</td>
+        <td><span class="badge mid">中〜大</span><br>iPad・スマホしか持たないオーナーは、いま配信やタグ管理を正常に操作できない。該当する顧客の割合が効果を左右する。</td>
+        <td><span class="badge hi">大</span><br>画面ごとの作業で量が多い。ただし<strong>崩れを止めるだけなら中</strong>。</td>
+        <td><span class="badge lo">高</span><br>表示層だけの変更でデータに触れず、最も戻しやすい。</td>
+        <td><strong>4 位</strong><br><span style="font-size:12px;color:var(--ink-faint)">※崩れ止めは先行の価値あり</span></td>
+      </tr>
     </tbody>
   </table>
   </div>
@@ -146,8 +171,8 @@
   <figure>
     <div class="fig-body">
       <svg viewBox="0 0 640 400" width="640" height="400" role="img"
-           aria-label="効果と手間の 2 軸で 3 提案を配置した図。提案1は効果が大きく手間が小さい左上寄り、提案2は中央右寄り、提案3は効果は大きいが手間も大きい右上に位置する。">
-        <title>効果と開発の手間による 3 提案の位置づけ</title>
+           aria-label="効果と手間の 2 軸で 4 提案を配置した図。提案1は効果が大きく手間が小さい左上、提案3は効果も手間も大きい右上、提案4は右側の中ほど、提案2は中央下寄りに位置する。">
+        <title>効果と開発の手間による 4 提案の位置づけ</title>
 
         <!-- 左上（手間小・効果大）の推奨ゾーン -->
         <rect x="70" y="40" width="235" height="150" class="s-accent-bg" rx="4"/>
@@ -179,16 +204,23 @@
         <text x="448" y="152" font-size="13" font-weight="700" text-anchor="end">提案 3 業種別のひな形</text>
         <text x="448" y="170" font-size="11.5" class="dim" text-anchor="end">11〜19 人日＋継続的な中身の更新</text>
 
+        <!-- 提案4 -->
+        <circle cx="486" cy="205" r="9" class="s4-f ring"/>
+        <text x="486" y="195" font-size="11" font-weight="700" text-anchor="middle" class="soft">4</text>
+        <text x="472" y="203" font-size="13" font-weight="700" text-anchor="end">提案 4 iPad・スマホ表示</text>
+        <text x="472" y="221" font-size="11.5" class="dim" text-anchor="end">工数は大／端末が限られる顧客に効く</text>
+
         <!-- 提案2 -->
-        <circle cx="370" cy="232" r="9" class="s2-f ring"/>
-        <text x="370" y="222" font-size="11" font-weight="700" text-anchor="middle" class="soft">2</text>
-        <text x="356" y="262" font-size="13" font-weight="700" text-anchor="end">提案 2 設定のつながりの見える化</text>
-        <text x="356" y="280" font-size="11.5" class="dim" text-anchor="end">第 1 段 9〜13 人日／効くのは運用 3 か月以降</text>
+        <circle cx="356" cy="258" r="9" class="s2-f ring"/>
+        <text x="356" y="248" font-size="11" font-weight="700" text-anchor="middle" class="soft">2</text>
+        <text x="342" y="280" font-size="13" font-weight="700" text-anchor="end">提案 2 設定のつながりの見える化</text>
+        <text x="342" y="298" font-size="11.5" class="dim" text-anchor="end">第 1 段 9〜13 人日／効くのは運用 3 か月以降</text>
       </svg>
     </div>
     <figcaption>
       図 0: 上の表を 1 枚にしたもの。位置は上の表の評価をそのまま置いただけで、計測値ではありません。
       提案 1 だけが「手間が小さく効果が大きい」側にあり、これが推奨の理由です。
+      提案 4 は手間が大きい側ですが、「崩れを止める」だけに絞れば手間は中ほどに下がります。
     </figcaption>
   </figure>
 
@@ -201,7 +233,7 @@
       <li><strong>取り返しがつかない失敗を防ぐ機能である。</strong>
         LINE の配信は送信後に取り消せません。宛先を間違えた、リンクが間違っていた、下書きのまま送った —
         これらは謝罪・ブロック・消費した通数のすべてが戻りません。
-        他の 2 件は「不便」の解消ですが、提案 1 は「損失」の防止です。</li>
+        他の提案は「不便」や「不格好」の解消ですが、提案 1 は「損失」の防止です。</li>
       <li><strong>効く範囲が最も広い。</strong>
         配信するアカウントは必ずこの画面を通ります。業種・規模・利用月数を問いません。</li>
       <li><strong>手間が小さく、やめやすい。</strong>
@@ -211,6 +243,8 @@
     <p style="margin-bottom:0">
       提案 2 は第 1 段（使用箇所の表示と削除時の警告）だけを先に出す形であれば、提案 1 の次に着手する価値があります。
       提案 3 は開発よりも「業種ごとの中身を誰が作り、誰が更新し続けるか」を決めることが先だと考えています。
+      提案 4 は全体の優先度では 4 番目ですが、<strong>「崩れを止める」部分だけは見える不具合で信頼感に直結する</strong>ため、
+      提案 2・3 の大きな開発より先に着手する価値があると考えています。
     </p>
   </div>
 
@@ -219,6 +253,7 @@
     <li><a href="/proposal-1">提案 1: 配信前の確認画面を強化する（推奨）</a></li>
     <li><a href="/proposal-2">提案 2: 設定のつながりを見えるようにする</a></li>
     <li><a href="/proposal-3">提案 3: 業種別のひな形を用意する</a></li>
+    <li><a href="/proposal-4">提案 4: iPad・スマホでの表示崩れを直す（実機で発見）</a></li>
     <li><a href="/scope">前提と調査範囲 — 何をどこまで確認したか、工数の数え方</a></li>
   </ul>
 
@@ -232,6 +267,46 @@
     <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
   </div>
 </footer>
+
+<script>
+/* 動きは控えめに。OS の「視差効果を減らす」設定を尊重し、
+   JavaScript が動かない環境でも内容はそのまま読める作りにしている。
+   外部ライブラリは使用しない。 */
+(function () {
+  var reduce = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  // 読み進み度のバー
+  var bar = document.createElement('div');
+  bar.id = 'progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+  var tick = function () {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', tick, { passive: true });
+  window.addEventListener('resize', tick);
+  tick();
+
+  // スクロールに応じたフェードイン
+  if (!('IntersectionObserver' in window)) return;
+  var els = [].slice.call(
+    document.querySelectorAll('.card, figure, .table-scroll, .note, a.pcard, .effort')
+  );
+  if (!els.length) return;
+  document.documentElement.classList.add('js-reveal');
+  els.forEach(function (el) { el.classList.add('reveal'); });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
 
 </body>
 </html>

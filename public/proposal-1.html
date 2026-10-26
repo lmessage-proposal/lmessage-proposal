@@ -19,6 +19,7 @@
       <a href="/proposal-1" aria-current="page">提案1 配信前確認</a>
       <a href="/proposal-2">提案2 つながり</a>
       <a href="/proposal-3">提案3 ひな形</a>
+      <a href="/proposal-4">提案4 iPad対応</a>
       <a href="/scope">前提と調査範囲</a>
     </nav>
   </div>
@@ -612,6 +613,46 @@
     <p>「L Message」「LINE」は各社の商標です。本サイトは個人が公開情報をもとに作成したもので、両社の公式資料ではありません。</p>
   </div>
 </footer>
+
+<script>
+/* 動きは控えめに。OS の「視差効果を減らす」設定を尊重し、
+   JavaScript が動かない環境でも内容はそのまま読める作りにしている。
+   外部ライブラリは使用しない。 */
+(function () {
+  var reduce = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  // 読み進み度のバー
+  var bar = document.createElement('div');
+  bar.id = 'progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+  var tick = function () {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+  };
+  window.addEventListener('scroll', tick, { passive: true });
+  window.addEventListener('resize', tick);
+  tick();
+
+  // スクロールに応じたフェードイン
+  if (!('IntersectionObserver' in window)) return;
+  var els = [].slice.call(
+    document.querySelectorAll('.card, figure, .table-scroll, .note, a.pcard, .effort')
+  );
+  if (!els.length) return;
+  document.documentElement.classList.add('js-reveal');
+  els.forEach(function (el) { el.classList.add('reveal'); });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
 
 </body>
 </html>

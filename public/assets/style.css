@@ -475,6 +475,9 @@ ul.check li::before {
 @media print {
   header.site, nav.site, .pager { display: none; }
   body { background: #fff; }
+  /* フェードイン待ちの要素が印刷で消えないようにする */
+  .js-reveal .reveal { opacity: 1 !important; transform: none !important; }
+  #progress { display: none; }
 }
 
 /* ---------- 優先順位マップ（3案の位置づけ）用の系列色 ----------
@@ -493,7 +496,57 @@ ul.check li::before {
     --series-3: #199e70;
   }
 }
+:root { --series-4: #4a3aa7; }
+@media (prefers-color-scheme: dark) { :root { --series-4: #9085e9; } }
 svg .s1-f { fill: var(--series-1); }
 svg .s2-f { fill: var(--series-2); }
 svg .s3-f { fill: var(--series-3); }
+svg .s4-f { fill: var(--series-4); }
 svg .ring { stroke: var(--card); stroke-width: 2; }
+
+/* ===========================================================
+   動き（控えめに。必要な人には完全に無効化する）
+   - 外部ライブラリは使わず、各ページ末尾の短いインラインスクリプトのみ
+   - JavaScript が無効でも内容はすべて読める（opacity は JS が付く時だけ）
+   =========================================================== */
+
+html { scroll-behavior: smooth; }
+
+/* 固定ヘッダーの下に見出しが隠れるのを防ぐ（目次リンク用） */
+h2[id], h3[id], [id].anchor { scroll-margin-top: 76px; }
+
+/* 読み進み度のバー */
+#progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px; width: 0;
+  background: var(--accent);
+  z-index: 60;
+  transition: width .12s linear;
+  pointer-events: none;
+}
+
+/* スクロールに応じたフェードイン。js-reveal は JS が付けるので、
+   JS が動かない環境では最初から見えている */
+.js-reveal .reveal { opacity: 0; transform: translateY(10px); }
+.js-reveal .reveal.in {
+  opacity: 1;
+  transform: none;
+  transition: opacity .5s ease, transform .5s ease;
+}
+
+/* 触れるものには軽い反応だけ */
+a.pcard { transition: border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+a.pcard:hover { transform: translateY(-2px); }
+nav.site a { transition: background-color .15s ease, color .15s ease; }
+.pager a { transition: color .15s ease; }
+
+/* OS で「動きを減らす」を選んでいる人には、動きを一切出さない */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js-reveal .reveal,
+  .js-reveal .reveal.in { opacity: 1; transform: none; transition: none; }
+  a.pcard, a.pcard:hover { transition: none; transform: none; }
+  nav.site a, .pager a { transition: none; }
+  #progress { transition: none; }
+}
